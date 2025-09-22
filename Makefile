@@ -1,4 +1,4 @@
-.PHONY: build test clean docker unittest lint
+.PHONY: build test clean docker unittest lint arm64
 
 ARCH=$(shell uname -m)
 
@@ -10,7 +10,7 @@ SDKVERSION=$(shell cat ./go.mod | grep 'github.com/edgexfoundry/device-sdk-go/v4
 
 DOCKER_TAG=$(VERSION)-dev
 
-GOFLAGS=-ldflags "-X github.com/edgexfoundry/device-s7.Version=$(VERSION) \
+GOFLAGS=-ldflags "-s -w -X github.com/edgexfoundry/device-s7.Version=$(VERSION) \
                   -X github.com/edgexfoundry/device-sdk-go/v4/internal/common.SDKVersion=$(SDKVERSION)" \
                    -trimpath -mod=readonly
 GOTESTFLAGS?=-race
@@ -29,6 +29,9 @@ tidy:
 # but is required for test with -race, so must disable it for the builds only
 cmd/device-s7:
 	CGO_ENABLED=1  go build $(GOFLAGS) -o $@ ./cmd
+
+arm64:
+	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build $(GOFLAGS) -o cmd/device-s7-arm64 ./cmd
 
 docker:
 	docker build \

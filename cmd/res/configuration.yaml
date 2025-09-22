@@ -1,5 +1,5 @@
 Writable:
-  LogLevel: "INFO"
+  LogLevel: "DEBUG"
 
 Service:
   Host: "localhost"
@@ -13,5 +13,5 @@ MessageBus:
 Device:
   # By default, this service doesn't have any profiles or devices.
   # The following settings can be overridden with env overrides to apply customized values.
-  ProfilesDir: ""
-  DevicesDir: ""
+  ProfilesDir: "./res/profiles"
+  DevicesDir: "./res/devices"

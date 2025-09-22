@@ -73,6 +73,7 @@ type DBInfo struct {
 	Area       int
 	DBNumber   int
 	Start      int
+	Bit        int
 	Amount     int
 	WordLength int
 	DBArray    []string
@@ -156,6 +157,7 @@ outloop:
 					WordLen:  0,
 					DBNumber: 0,
 					Start:    0,
+					Bit:      0,
 					Amount:   0,
 					Data:     dataset[j*batch_size+i],
 				}
@@ -167,6 +169,7 @@ outloop:
 				WordLen:  dbInfo.WordLength,
 				DBNumber: dbInfo.DBNumber,
 				Start:    dbInfo.Start,
+				Bit:      dbInfo.Bit,
 				Amount:   dbInfo.Amount,
 				Data:     dataset[j*batch_size+i],
 			}
@@ -283,6 +286,7 @@ func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]mod
 				Area:       0,
 				DBNumber:   0,
 				Start:      0,
+				Bit:        0,
 				Amount:     0,
 				WordLength: 0,
 				DBArray:    []string{nodeName},
@@ -301,6 +305,7 @@ func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]mod
 			WordLen:  dbInfo.WordLength,
 			DBNumber: dbInfo.DBNumber,
 			Start:    dbInfo.Start,
+			Bit:      dbInfo.Bit,
 			Amount:   dbInfo.Amount,
 			Data:     dataset[i],
 		}
@@ -564,6 +569,7 @@ func (s *Driver) getDBInfo(variable string) (dbInfo *DBInfo, err error) {
 	var wordLen int
 	var dbNo int64
 	var dbIndex int64
+	var dbBit int64
 	var dbArray []string
 
 	//var area, dbNumber, start, amount, wordLen int
@@ -632,31 +638,81 @@ func (s *Driver) getDBInfo(variable string) (dbInfo *DBInfo, err error) {
 			return nil, fmt.Errorf("error when parsing dbtype")
 		}
 	default:
-		switch otherArea := variable[0:1]; otherArea {
-		case "E":
+		s.lc.Infof("variable: %+v", variable)
+		dbNo = 0
+		otherArea := variable[0:1]
+		switch otherArea {
 		case "I": //input
-		case "A":
-		case "0": //output
+			area = 0x81
+		case "Q": //output
+			area = 0x82
 		case "M": //memory
+			area = 0x83
+		case "V": //data block DB1
+			dbNo = 1
+			area = 0x84
 		case "T": //timer
-			return
-		case "Z":
+			area = 0x1D
+			wordLen = s7wltimer
 		case "C": //counter
-			return
+			area = 0x1C
+			wordLen = s7wlcounter
 		default:
 			s.lc.Errorf("error when parsing db area")
 			return nil, fmt.Errorf("error when parsing db area")
 		}
 
+		if otherArea == "I" || otherArea == "Q" || otherArea == "M" || otherArea == "V" {
+			dbArray = strings.Split(variable, ".")
+			if len(dbArray) > 2 {
+				s.lc.Errorf("The point address of %+v is incorrect", variable)
+				return nil, fmt.Errorf("the point address of %+v is incorrect", variable)
+			} else if len(dbArray) == 2 {
+				wordLen = s7wlbit
+				amount = 1
+				// DBIndex = dbIndex + dbBit (I12.5 = 12<<3 + 5 = 96+5 = 101 = 0x65)
+				dbBit, err = strconv.ParseInt(string(string(dbArray[1])), 10, 16)
+				if err != nil {
+					s.lc.Errorf("convert dbBit of %+v to int failed.err:%v", variable, err)
+					return nil, fmt.Errorf("convert dbBit of %+v to int failed.err:%v", variable, err)
+				}
+				dbIndex, err = strconv.ParseInt(string(string(dbArray[0])[1:]), 10, 16)
+				if err != nil {
+					s.lc.Errorf("convert dbIndex of %+v to int failed.err:%v", variable, err)
+					return nil, fmt.Errorf("convert dbIndex of %+v to int failed.err:%v", variable, err)
+				}
+			} else {
+				wordLen = s7wlbyte
+				dbType := variable[1:2]
+				switch dbType {
+				case "B": //byte
+					amount = 1
+				case "W": //word
+					amount = 2
+				case "D": //dword
+					amount = 4
+				case "L": //ulong
+					amount = 8
+				case "F": //float
+					amount = 4
+				default:
+					s.lc.Errorf("error when parsing dbtype: %+v", dbType)
+					return nil, fmt.Errorf("error when parsing dbtype: %+v", dbType)
+				}
+				dbIndex, err = strconv.ParseInt(variable[2:], 10, 16)
+				if err != nil {
+					s.lc.Errorf("convert dbIndex of %+v to int failed.err:%v", variable, err)
+					return nil, fmt.Errorf("convert dbIndex of %+v to int failed.err:%v", variable, err)
+				}
+			}
+		}
 	}
-	if err != nil {
-		s.lc.Errorf("convert %+v to int failed.err:%v", variable, err)
-		return nil, fmt.Errorf("convert %+v to int failed.err:%v", variable, err)
-	}
+
 	return &DBInfo{
 		Area:       area,
 		DBNumber:   int(dbNo),
 		Start:      int(dbIndex),
+		Bit:        int(dbBit),
 		Amount:     amount,
 		WordLength: wordLen,
 		DBArray:    dbArray,
