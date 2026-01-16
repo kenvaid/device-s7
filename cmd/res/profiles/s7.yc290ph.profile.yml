@@ -1,0 +1,232 @@
+name: BD-YC290PH-S7-Profile
+manufacturer: 一川机械
+description: 一川机械编切机YC290PH/A
+model: YC-290PH/A
+labels:
+- 编切机
+deviceResources:
+- name: k3ndrcbtgy
+  description: 总数设定
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD2010
+- name: k3ndrcbogy
+  description: 总数
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD2000
+- name: k3munc31gy
+  description: 盒装数设定
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1320
+- name: k3munc3tgy
+  description: 盒装数
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1310
+- name: k3muccjo
+  description: 排颗数设定
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW610
+- name: k3muccba
+  description: 排颗数
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW608
+- name: k3mueqbo
+  description: 压料时间设定
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW480
+- name: k3mueqjo
+  description: 压料时间
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW490
+- name: k3mukcj1
+  description: 折弯时间设定
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW512
+- name: k3mukcjw
+  description: 折弯时间
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW514
+- name: k3mukc3w
+  description: 夹料启动时间设定
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW534
+- name: k3mukc3s
+  description: 夹料启动时间
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW536
+- name: k3mukc3o
+  description: 夹料寸动时间设定
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW530
+- name: k3mukc31
+  description: 夹料寸动时间
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW532
+- name: k3munpjsge
+  description: 反极总数
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1562
+- name: k3munpjigo
+  description: 短脚NG
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1554
+- name: k3munpji8y
+  description: 长脚NG
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1558
+- name: k3munpjigy
+  description: 套管NG
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1550
+- name: k3munpjsgo
+  description: 脚距NG
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1564
+- name: kah1hpo
+  description: 有故障
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: V9.6
+- name: kra1hce
+  description: 运行状态
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: Q1.1
+- name: kra1hco
+  description: 故障状态
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: Q1.2
+- name: kra1hpy
+  description: 待机状态
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: Q1.4
+- name: kaaunmt1
+  description: 设备运行中
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: V11.2
+deviceCommands:
+- name: Values
+  readWrite: R
+  isHidden: false
+  resourceOperations:
+  - deviceResource: k3ndrcbtgy
+  - deviceResource: k3ndrcbogy
+  - deviceResource: k3munc31gy
+  - deviceResource: k3munc3tgy
+  - deviceResource: k3muccjo
+  - deviceResource: k3muccba
+  - deviceResource: k3mueqbo
+  - deviceResource: k3mueqjo
+  - deviceResource: k3mukcj1
+  - deviceResource: k3mukcjw
+  - deviceResource: k3mukc3w
+  - deviceResource: k3mukc3s
+  - deviceResource: k3mukc3o
+  - deviceResource: k3mukc31
+  - deviceResource: k3munpjsge
+  - deviceResource: k3munpjigo
+  - deviceResource: k3munpji8y
+  - deviceResource: k3munpjigy
+  - deviceResource: k3munpjsgo
+- name: Alarms
+  readWrite: R
+  isHidden: false
+  resourceOperations:
+  - deviceResource: kah1hpo
+  - deviceResource: kra1hce
+  - deviceResource: kra1hco
+  - deviceResource: kra1hpy
+  - deviceResource: kaaunmt1

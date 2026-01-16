@@ -1,0 +1,37 @@
+name: BD-YC320A-S7-Profile
+manufacturer: "一川机械"
+description: "一川机械编切机YC320A"
+model: YC-320A
+labels: 
+- "编切机"
+
+deviceResources:
+  - name: VD3012
+    description: "总数设定"
+    isHidden: true
+    properties:
+      valueType: Uint32
+      readWrite: R
+    attributes:
+      NodeName: VD3012
+  - name: V9.6
+    description: "有报警"
+    isHidden: true
+    properties:
+      valueType: Bool
+      readWrite: R
+    attributes:
+      NodeName: V9.6
+
+deviceCommands:
+  - name: "Values"
+    readWrite: "R"
+    isHidden: false
+    resourceOperations:
+      - { deviceResource: "VD3012" }
+
+  - name: "Alarms"
+    readWrite: "R"
+    isHidden: false
+    resourceOperations:
+      - { deviceResource: "V9.6" }

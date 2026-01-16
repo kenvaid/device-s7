@@ -21,7 +21,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 
-	"github.com/robinson/gos7"
+	"github.com/kenvaid/gos7"
 	"github.com/spf13/cast"
 )
 
@@ -87,17 +87,25 @@ func (s *Driver) Initialize(sdk interfaces.DeviceServiceSDK) error {
 	s.s7Clients = make(map[string]*S7Client)
 
 	// initialize the all devices connection in the service started
-	for _, device := range sdk.Devices() {
-		s7Client := s.NewS7Client(device.Name, device.Protocols)
-		if s7Client == nil {
-			s.lc.Errorf("failed to initialize S7 client for '%s' device, skipping this device.", device.Name)
-			continue
-		}
-		s.s7Clients[device.Name] = s7Client
-		s.lc.Debugf("S7Client connected for device: %s", device.Name)
-	}
+	// for _, device := range sdk.Devices() {
+	// 	s7Client := s.NewS7Client(device.Name, device.Protocols)
+	// 	if s7Client == nil {
+	// 		s.lc.Errorf("failed to initialize S7 client for '%s' device, skipping this device.", device.Name)
+	// 		continue
+	// 	}
+	// 	s.s7Clients[device.Name] = s7Client
+	// 	s.lc.Debugf("S7Client connected for device: %s", device.Name)
+	// }
 
 	return nil
+}
+
+func (s *S7Client) useClient() {
+	s.mu.Lock()
+}
+
+func (s *S7Client) freeClient() {
+	s.mu.Unlock()
 }
 
 // HandleReadCommands triggers a protocol Read operation for the specified device.
@@ -119,6 +127,11 @@ func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]mode
 
 	// Get S7 device connection information, each Device has its own connection.
 	s7Client := s.getS7Client(deviceName, protocols)
+	if s7Client == nil {
+		return nil, fmt.Errorf("failed to get S7 client for '%s' device", deviceName)
+	}
+	s7Client.useClient()
+	defer s7Client.freeClient()
 
 	// assemble s7DataItems, get items, fetch data
 
@@ -151,7 +164,7 @@ outloop:
 			dbInfo, err := s.getDBInfo(nodename)
 			if err != nil {
 				count++
-				s.lc.Errorf("convert nodeName to dbInfo failed,err =%v", err)
+				s.lc.Errorf("device: %s convert nodeName to dbInfo failed,err =%v", deviceName, err)
 				var nilS7DataItem = gos7.S7DataItem{
 					Area:     0,
 					WordLen:  0,
@@ -175,9 +188,9 @@ outloop:
 			}
 			s7DataItems = append(s7DataItems, s7DataItem)
 		}
-		s.lc.Debugf("Read from S7DataItems: %+v", s7DataItems)
+		s.lc.Debugf("Read from S7DataItems for device: %s: %+v", deviceName, s7DataItems)
 		if count == len(tmp_reqs) {
-			s.lc.Errorf("commandRequest %+v is invalid", tmp_reqs)
+			s.lc.Errorf("device: %s commandRequest %+v is invalid", deviceName, tmp_reqs)
 			continue
 		}
 
@@ -186,33 +199,31 @@ outloop:
 		for {
 			err = s7Client.Client.AGReadMulti(s7DataItems, len(s7DataItems))
 			if err != nil {
-				s.lc.Errorf("AGReadMulti Error: %s, reconnecting...", err)
-				s.mu.Lock()
-				s.s7Clients[deviceName] = nil
-				s.mu.Unlock()
-				s7Client = s.getS7Client(deviceName, protocols)
+				s.lc.Errorf("device: %s AGReadMulti Error: %s retries: %d", deviceName, err, retrytimes)
 			} else {
-				s.lc.Debugf("AGReadMulti read from 'dataset': ", dataset)
+				s.lc.Debugf("device: %s AGReadMulti read from 'dataset': ", deviceName, dataset)
 				break
 			}
 
 			retrytimes--
 			if retrytimes == 0 {
-				break
+				s.lc.Errorf("S7 client for device %s has errors, closing client", deviceName)
+				s.closeS7Client(deviceName)
+				break outloop
 			}
-
+			time.Sleep(50 * time.Millisecond)
 		}
 		//4. use s7_errors to record the abnormal error messages of all read points
 		for i, s7DataItem := range s7DataItems {
 			if s7_error := s7DataItem.Error; s7_error != "" {
-				s.lc.Errorf("s7DataItem:%+v,error: %s", s7DataItem, s7_error)
+				s.lc.Errorf("device: %s s7DataItem:%+v,error: %s", deviceName, s7DataItem, s7_error)
 				s7_errors[j*batch_size+i] = s7_error
 			}
 		}
 
 	}
 	// end assemble s7DataItems
-	s.lc.Debugf("Read S7DataItems: %+v", s7DataItems)
+	s.lc.Debugf("Read S7DataItems for device: %s: %+v", deviceName, s7DataItems)
 	// read results from the dataset of s7DataItems
 	for i, req := range reqs {
 
@@ -220,29 +231,33 @@ outloop:
 		var value any
 
 		if s7_error := s7_errors[i]; s7_error != "" {
-			s.lc.Errorf("S7 Client AGRead req %+v failed,error: %s", req, s7_error)
+			s.lc.Errorf("S7 Client for device: %s AGRead req %+v failed,error: %s", deviceName, req, s7_error)
 			continue
 		}
 
 		value, err := getCommandValueType(dataset[i], req.Type)
 		if err != nil {
-			s.lc.Errorf("getCommandValueType error: %s", err)
+			s.lc.Errorf("device: %s getCommandValueType error: %s", deviceName, err)
 			continue
 		}
 
 		result, err = getCommandValue(req, value)
 		if err != nil {
-			s.lc.Errorf("getCommandValue error: %v", err)
+			s.lc.Errorf("device: %s getCommandValue error: %v", deviceName, err)
 			continue
 		}
 
 		res = append(res, result)
 	}
 	if len(res) == 0 {
-		s.lc.Errorf("read reqs %+v failed", reqs)
-		return nil, fmt.Errorf("read reqs %+v failed", reqs)
+		// s.mu.Lock()
+		// s.closeS7Client(s7Client)
+		// s.s7Clients[deviceName] = nil
+		// s.mu.Unlock()
+		// s.lc.Errorf("read reqs %+v failed", reqs)
+		return nil, fmt.Errorf("device: %s read reqs %+v failed", deviceName, reqs)
 	}
-	s.lc.Debugf("CommandValues: %s", res)
+	s.lc.Debugf("CommandValues for device %s: %s", deviceName, res)
 
 	return
 }
@@ -275,13 +290,13 @@ func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]mod
 	var count int
 	for i, req := range reqs {
 
-		s.lc.Debugf("S7Driver.HandleWriteCommands: protocols: %v, resource: %v, parameters: %v, attributes: %v", protocols, req.DeviceResourceName, params[i], req.Attributes)
+		s.lc.Debugf("S7Driver.HandleWriteCommands: device: %s, protocols: %v, resource: %v, parameters: %v, attributes: %v", deviceName, protocols, req.DeviceResourceName, params[i], req.Attributes)
 
 		var nodeName = cast.ToString(req.Attributes["NodeName"])
 		var dbInfo, err = s.getDBInfo(nodeName)
 		if err != nil {
 			count++
-			s.lc.Errorf("convert nodeName %v to dbInfo failed,err =%v", nodeName, err)
+			s.lc.Errorf("device: %s convert nodeName %v to dbInfo failed,err =%v", deviceName, nodeName, err)
 			dbInfo = &DBInfo{
 				Area:       0,
 				DBNumber:   0,
@@ -295,7 +310,7 @@ func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]mod
 
 		reading, err := newCommandValue(req.Type, params[i])
 		if err != nil {
-			s.lc.Errorf("newCommandValue error: %s", err)
+			s.lc.Errorf("device: %s newCommandValue error: %s", deviceName, err)
 		}
 		helper.SetValueAt(dataset[i], 0, reading)
 
@@ -313,10 +328,10 @@ func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]mod
 
 	}
 	if count == len(reqs) {
-		s.lc.Errorf("commandWrite %+v is invalid", reqs)
-		return fmt.Errorf("commandWrite %+v is invalid", reqs)
+		// s.lc.Errorf("commandWrite %+v is invalid", reqs)
+		return fmt.Errorf("device: %s commandWrite %+v is invalid", deviceName, reqs)
 	}
-	s.lc.Debugf("Write to S7DataItems: %s", s7DataItems)
+	s.lc.Debugf("Write to S7DataItems for device %s: %s", deviceName, s7DataItems)
 
 	// send command requests
 	times := int(reqs_len / batch_size)
@@ -324,6 +339,11 @@ func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]mod
 	var tmp_s7DateItems = []gos7.S7DataItem{}
 
 	s7Client := s.getS7Client(deviceName, protocols)
+	if s7Client == nil {
+		return fmt.Errorf("failed to get S7 client for '%s' device", deviceName)
+	}
+	s7Client.useClient()
+	defer s7Client.freeClient()
 
 outloop:
 	for j := 0; j <= times; j++ {
@@ -345,25 +365,23 @@ outloop:
 		for {
 			err = s7Client.Client.AGWriteMulti(tmp_s7DateItems, len(tmp_s7DateItems))
 			if err != nil {
-				s.lc.Errorf("AGWriteMulti Error: %s, reconnecting...", err)
-				s.mu.Lock()
-				s.s7Clients[deviceName] = nil
-				s.mu.Unlock()
-				s7Client = s.getS7Client(deviceName, protocols)
+				s.lc.Errorf("device: %s AGWriteMulti Error: %s", deviceName, err)
 			} else {
-				s.lc.Debugf("AGWriteMulti write from 'dataset': %s", dataset)
+				s.lc.Debugf("device: %s AGWriteMulti write from 'dataset': %s", deviceName, dataset)
 				break
 			}
 
 			retrytimes--
 			if retrytimes == 0 {
-				break
+				s.lc.Errorf("S7 client for device %s has errors, closing client", deviceName)
+				s.closeS7Client(deviceName)
+				break outloop
 			}
 		}
 		// Record all errors
 		for i, tmp_s7DataItem := range tmp_s7DateItems {
 			if s7_error := tmp_s7DataItem.Error; s7_error != "" {
-				s.lc.Errorf("tmp_s7DataItem:%+v,error: %s", tmp_s7DataItem, s7_error)
+				s.lc.Errorf("device: %s tmp_s7DataItem:%+v,error: %s", deviceName, tmp_s7DataItem, s7_error)
 				s7_errors[j*batch_size+i] = s7_error
 			}
 		}
@@ -372,7 +390,7 @@ outloop:
 
 	for _, s7_error := range s7_errors {
 		if s7_error != "" {
-			s.lc.Errorf("S7 Client AGWriteMulti error: %s", s7_error)
+			s.lc.Errorf("S7 Client for device %s AGWriteMulti error: %s", deviceName, s7_error)
 			return err
 		}
 	}
@@ -402,9 +420,8 @@ func (s *Driver) Stop(force bool) error {
 func (s *Driver) AddDevice(deviceName string, protocols map[string]models.ProtocolProperties, adminState models.AdminState) error {
 	s.lc.Debugf("a new Device is added: %s", deviceName)
 
-	s.mu.Lock()
-	s.s7Clients[deviceName] = nil
-	s.mu.Unlock()
+	s.closeS7Client(deviceName)
+
 	s7Client := s.getS7Client(deviceName, protocols)
 	if s7Client == nil {
 		errt := fmt.Errorf("failed to initialize S7 client for '%s' device, skipping this device", deviceName)
@@ -505,12 +522,13 @@ func (s *Driver) NewS7Client(deviceName string, protocol map[string]models.Proto
 	idletimeout, _ := cast.ToIntE(pp["IdleTimeout"])
 
 	// create handler: PLC tcp client
-	handler := gos7.NewTCPClientHandler(host+":"+port, rack, slot)
+	address := host + ":" + port
+	handler := gos7.NewTCPClientHandler(address, rack, slot)
 	if handler == nil {
-		s.lc.Errorf("Cant not create NewTCPClientHandler: %s", handler)
+		s.lc.Errorf("Cant not create TCPClientHandler: %s", deviceName)
 		return nil
 	}
-	s.lc.Debugf("New TCP Client: %s", handler)
+	s.lc.Debugf("New TCP Client for %s: %s", deviceName, address)
 
 	// handler connect timeout from 'Timeout'
 	handler.Timeout = time.Duration(timeout) * time.Second
@@ -522,16 +540,29 @@ func (s *Driver) NewS7Client(deviceName string, protocol map[string]models.Proto
 	err := handler.Connect()
 	if err != nil {
 		s.lc.Errorf("Can't handler S7 Connect: %s, error: %s", deviceName, err)
-		// return nil
+		return nil
 	}
 
 	s7client := gos7.NewClient(handler)
 	client := &S7Client{
 		DeviceName: deviceName,
 		Client:     s7client,
+		Handler:    handler,
 	}
 	return client
 
+}
+
+func (s *Driver) closeS7Client(deviceName string) {
+	s.mu.Lock()
+	s7Client := s.s7Clients[deviceName]
+	delete(s.s7Clients, deviceName)
+	s.mu.Unlock()
+
+	if s7Client != nil && s7Client.Handler != nil {
+		s7Client.Handler.Close()
+		s7Client.Handler = nil
+	}
 }
 
 // Get S7Client by 'DeviceName'
@@ -540,16 +571,27 @@ func (s *Driver) getS7Client(deviceName string, protocols map[string]models.Prot
 	s7Client := s.s7Clients[deviceName]
 	s.mu.Unlock()
 
-	if s7Client == nil {
-		s.lc.Warnf("S7CLient for device %s not found. Creating it...", deviceName)
-		s7Client = s.NewS7Client(deviceName, protocols)
-		s.mu.Lock()
-		s.s7Clients[deviceName] = s7Client
-		s.mu.Unlock()
+	if s7Client != nil {
+		return s7Client
 	}
 
-	return s7Client
+	s.lc.Warnf("S7CLient for device %s not found. Creating it...", deviceName)
+	newClient := s.NewS7Client(deviceName, protocols)
+	if newClient == nil {
+		return nil
+	}
 
+	s.mu.Lock()
+	existClient := s.s7Clients[deviceName]
+	if existClient != nil {
+		newClient.Handler.Close()
+		s.mu.Unlock()
+		return existClient
+	}
+	s.s7Clients[deviceName] = newClient
+	s.mu.Unlock()
+
+	return newClient
 }
 
 // transfer DBstring to DBInfo
@@ -638,7 +680,7 @@ func (s *Driver) getDBInfo(variable string) (dbInfo *DBInfo, err error) {
 			return nil, fmt.Errorf("error when parsing dbtype")
 		}
 	default:
-		s.lc.Infof("variable: %+v", variable)
+		s.lc.Debugf("variable: %+v", variable)
 		dbNo = 0
 		otherArea := variable[0:1]
 		switch otherArea {

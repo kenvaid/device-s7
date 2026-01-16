@@ -1,0 +1,364 @@
+{
+    "properties": [
+        {
+            "id": "k3ndrcbtgy",
+            "name": "总数设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndrcbogy",
+            "name": "总数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munc31gy",
+            "name": "盒装数设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munc3tgy",
+            "name": "盒装数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3muccjo",
+            "name": "排颗数设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3muccba",
+            "name": "排颗数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3mueqbo",
+            "name": "压料时间设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3mueqjo",
+            "name": "压料时间",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3mukcj1",
+            "name": "折弯时间设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3mukcjw",
+            "name": "折弯时间",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3mukc3w",
+            "name": "夹料启动时间设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3mukc3s",
+            "name": "夹料启动时间",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3mukc3o",
+            "name": "夹料寸动时间设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3mukc31",
+            "name": "夹料寸动时间",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munpjsge",
+            "name": "反极总数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munpjigo",
+            "name": "短脚NG",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munpji8y",
+            "name": "长脚NG",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munpjigy",
+            "name": "套管NG",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munpjsgo",
+            "name": "脚距NG",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "kah1hpo",
+            "name": "有故障",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "kra1hce",
+            "name": "运行状态",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "kra1hco",
+            "name": "故障状态",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "kra1hpy",
+            "name": "待机状态",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "kaaunmt1",
+            "name": "设备运行中",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        }
+    ]
+}

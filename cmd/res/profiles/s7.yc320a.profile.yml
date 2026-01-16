@@ -1,0 +1,151 @@
+name: BD-YC320A-S7-Profile
+manufacturer: 一川机械
+description: 一川机械编切机YC320A
+model: YC-320A
+labels:
+- 编切机
+deviceResources:
+- name: k3ndgcbtge
+  description: 总数设定
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD3012
+- name: k3ndrcboge
+  description: 总数
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD2002
+- name: k3murcbtge
+  description: 盒装数设定
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW2012
+- name: k3murcbogy
+  description: 盒装数
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW2000
+- name: k3murcb1ga
+  description: 间隔数设定
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW2026
+- name: k3murcb1go
+  description: 间隔数
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW2024
+- name: k3murcbtgo
+  description: 补数
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW2014
+- name: k3munpjsge
+  description: 反极总数
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1562
+- name: k3munpjigo
+  description: 短脚
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1554
+- name: k3munpji8y
+  description: 长脚
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1558
+- name: k3munpjigy
+  description: 套管
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1550
+- name: k3munpjsgo
+  description: 脚距不正确
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW1564
+- name: kah1hpo
+  description: 有报警
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: V9.6
+- name: kaaunmts
+  description: 运行指示
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: V11.6
+- name: kranhcy
+  description: 运行输出
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: Q0.0
+deviceCommands:
+- name: Values
+  readWrite: R
+  isHidden: false
+  resourceOperations:
+  - deviceResource: k3ndgcbtge
+  - deviceResource: k3ndrcboge
+  - deviceResource: k3murcbtge
+  - deviceResource: k3murcbogy
+  - deviceResource: k3murcb1ga
+  - deviceResource: k3murcb1go
+  - deviceResource: k3murcbtgo
+  - deviceResource: k3munpjsge
+  - deviceResource: k3munpjigo
+  - deviceResource: k3munpji8y
+  - deviceResource: k3munpjigy
+  - deviceResource: k3munpjsgo
+- name: Alarms
+  readWrite: R
+  isHidden: false
+  resourceOperations:
+  - deviceResource: kah1hpo
+  - deviceResource: kaaunmts
+  - deviceResource: kranhcy

@@ -1,0 +1,724 @@
+{
+    "properties": [
+        {
+            "id": "k3ndrp3o",
+            "name": "生产数量",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndrp3w",
+            "name": "生产盘数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndnctogy",
+            "name": "进料数量",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndnctogo",
+            "name": "良品数量",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndncto8y",
+            "name": "容量不良",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndnctuge",
+            "name": "ESR不良",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndncttga",
+            "name": "座板CCD检测不良",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndnct1gy",
+            "name": "捺印CCD检测不良",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndnct1go",
+            "name": "载带CCD检测不良",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndnctuga",
+            "name": "正引脚CCD检测不良",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndnctwgy",
+            "name": "负引脚CCD检测不良",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndnct18y",
+            "name": "漏电NG",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3muncjo",
+            "name": "单盘实际数量",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3muncj1",
+            "name": "单盘设定数量",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murqj1",
+            "name": "载带已做盘数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murqjo",
+            "name": "载带设定盘数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murqjs",
+            "name": "胶带已做盘数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murqja",
+            "name": "胶带设定盘数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murpbo",
+            "name": "本批生产实际盘数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murpb1",
+            "name": "本批收料盘数上限设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murpta",
+            "name": "当前盘已进料数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqbsge",
+            "name": "容量标称",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqbsga",
+            "name": "容量上限",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqbzgy",
+            "name": "容量下限",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqbzgo",
+            "name": "损耗上限",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqbz8y",
+            "name": "损耗下限",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqb3go",
+            "name": "充电电源电压",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqbigy",
+            "name": "测试电压",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqbigo",
+            "name": "漏电上限",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqbi8y",
+            "name": "漏电下限",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqbaga",
+            "name": "ESR 上限",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndgqb3gy",
+            "name": "ESR 下限",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3bdcpjo",
+            "name": "设备报警650",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3bdcpjt",
+            "name": "设备报警651",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3bdcpj1",
+            "name": "设备报警652",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3bdcpju",
+            "name": "设备报警653",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3bdcpjw",
+            "name": "设备报警654",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3bdcpji",
+            "name": "设备报警655",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3bdcpjs",
+            "name": "设备报警656",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3bdcpjz",
+            "name": "设备报警657",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "kradyctqgh",
+            "name": "设备状态（运行/停止）",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "jwadrcjqge",
+            "name": "平送缺料报警",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "jwadrqjqgy",
+            "name": "捺印不良未排料，请取出",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "jwadrqjqgr",
+            "name": "载带上料检测不良（CCD)",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "jwadrqjqgo",
+            "name": "入载带产品未拉走异常报警",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "jwadgcbqgw",
+            "name": "座板圆盘错位报警",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "jwadgcbqga",
+            "name": "测试圆盘扭力过大",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "jwadgcbqgh",
+            "name": "极性检测反极，请取出",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        }
+    ]
+}

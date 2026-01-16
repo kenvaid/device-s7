@@ -1,0 +1,21 @@
+deviceList:
+- name: zb007
+  profileName: ZB-XCJZB-S7-Profile
+  description: 兴创嘉座板机XCJZB
+  labels:
+  - 座板机
+  protocols:
+    s7:
+      Host: 127.0.0.1
+      Port: 12307
+      Rack: 0
+      Slot: 1
+      Timeout: 2
+      IdleTimeout: 30
+  autoEvents:
+  - interval: 10s
+    onChange: false
+    sourceName: Values
+  - interval: 13s
+    onChange: false
+    sourceName: Alarms

@@ -13,5 +13,5 @@ MessageBus:
 Device:
   # By default, this service doesn't have any profiles or devices.
   # The following settings can be overridden with env overrides to apply customized values.
-  ProfilesDir: "./res/profiles"
-  DevicesDir: "./res/devices"
+  ProfilesDir: "./res/profiles1"
+  DevicesDir: "./res/devices1"

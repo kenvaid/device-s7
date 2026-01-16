@@ -1,0 +1,21 @@
+deviceList:
+- name: zb008
+  profileName: ZB-KD048ZB-S7-Profile
+  description: 柯典机械座板机KD048ZB
+  labels:
+  - 座板机
+  protocols:
+    s7:
+      Host: 192.168.128.1
+      Port: 12508
+      Rack: 0
+      Slot: 1
+      Timeout: 10
+      IdleTimeout: 30
+  autoEvents:
+  - interval: 10s
+    onChange: false
+    sourceName: Values
+  - interval: 13s
+    onChange: false
+    sourceName: Alarms

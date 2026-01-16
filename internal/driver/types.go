@@ -7,7 +7,9 @@
 package driver
 
 import (
-	"github.com/robinson/gos7"
+	"sync"
+
+	"github.com/kenvaid/gos7"
 )
 
 type S7Info struct {
@@ -29,4 +31,6 @@ type S7Info struct {
 type S7Client struct {
 	DeviceName string
 	Client     gos7.Client
+	Handler    *gos7.TCPClientHandler
+	mu         sync.Mutex
 }

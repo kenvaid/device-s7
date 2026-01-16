@@ -1,0 +1,121 @@
+deviceList:
+- name: qj001
+  profileName: BD-YC290PH-S7-Profile
+  description: 一川机械编切机YC290A
+  labels:
+  - 编切机
+  protocols:
+    s7:
+      Host: 127.0.0.1
+      Port: 12801
+      Rack: 0
+      Slot: 1
+      Timeout: 2
+      IdleTimeout: 30
+  autoEvents:
+  - interval: 10s
+    onChange: false
+    sourceName: Values
+  - interval: 13s
+    onChange: false
+    sourceName: Alarms
+- name: qj002
+  profileName: BD-YC290PH-S7-Profile
+  description: 一川机械编切机YC290A
+  labels:
+  - 编切机
+  protocols:
+    s7:
+      Host: 127.0.0.1
+      Port: 12802
+      Rack: 0
+      Slot: 1
+      Timeout: 2
+      IdleTimeout: 30
+  autoEvents:
+  - interval: 10s
+    onChange: false
+    sourceName: Values
+  - interval: 13s
+    onChange: false
+    sourceName: Alarms
+- name: qj004
+  profileName: BD-YC290PH-S7-Profile
+  description: 一川机械编切机YC290A
+  labels:
+  - 编切机
+  protocols:
+    s7:
+      Host: 127.0.0.1
+      Port: 12804
+      Rack: 0
+      Slot: 1
+      Timeout: 2
+      IdleTimeout: 30
+  autoEvents:
+  - interval: 10s
+    onChange: false
+    sourceName: Values
+  - interval: 13s
+    onChange: false
+    sourceName: Alarms
+- name: qj006
+  profileName: BD-YC290PH-S7-Profile
+  description: 一川机械编切机YC290PH
+  labels:
+  - 编切机
+  protocols:
+    s7:
+      Host: 127.0.0.1
+      Port: 12806
+      Rack: 0
+      Slot: 1
+      Timeout: 2
+      IdleTimeout: 30
+  autoEvents:
+  - interval: 10s
+    onChange: false
+    sourceName: Values
+  - interval: 13s
+    onChange: false
+    sourceName: Alarms
+- name: qj007
+  profileName: BD-YC290PH-S7-Profile
+  description: 一川机械编切机YC290PH
+  labels:
+  - 编切机
+  protocols:
+    s7:
+      Host: 127.0.0.1
+      Port: 12807
+      Rack: 0
+      Slot: 1
+      Timeout: 2
+      IdleTimeout: 30
+  autoEvents:
+  - interval: 10s
+    onChange: false
+    sourceName: Values
+  - interval: 13s
+    onChange: false
+    sourceName: Alarms
+- name: qj008
+  profileName: BD-YC290PH-S7-Profile
+  description: 一川机械编切机YC290PH
+  labels:
+  - 编切机
+  protocols:
+    s7:
+      Host: 127.0.0.1
+      Port: 12808
+      Rack: 0
+      Slot: 1
+      Timeout: 2
+      IdleTimeout: 30
+  autoEvents:
+  - interval: 10s
+    onChange: false
+    sourceName: Values
+  - interval: 13s
+    onChange: false
+    sourceName: Alarms

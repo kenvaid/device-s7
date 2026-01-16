@@ -1,0 +1,376 @@
+name: ZB-KD048ZB-S7-Profile
+manufacturer: 柯典机械
+description: 柯典机械座板机KD048ZB/KD080ZB
+model: KD048ZB/KD080ZB
+labels:
+- 座板机
+deviceResources:
+- name: k3ndrp3o
+  description: 生产数量
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD270
+- name: k3ndrp3w
+  description: 生产盘数
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD274
+- name: k3muncjo
+  description: 单盘实际数
+  isHidden: true
+  properties:
+    valueType: Uint16
+    readWrite: R
+  attributes:
+    NodeName: VW110
+- name: k3ndgqjtgy
+  description: 充电电源电压
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3910
+- name: k3ndgqjtgo
+  description: 漏电测试电压
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3914
+- name: k3ndgqbigo
+  description: 漏电上限
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3854
+- name: k3ndgqbi8y
+  description: 漏电下限
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3858
+- name: k3ndgqbaga
+  description: ESR 上限
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3886
+- name: k3ndgqb3gy
+  description: ESR 下限
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3890
+- name: k3ndgqbsge
+  description: 容量标称值
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3862
+- name: k3ndgqbsga
+  description: 容量上限
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3866
+- name: k3ndgqbzgy
+  description: 容量下限
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3870
+- name: k3ndgqbzgo
+  description: DF上限
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3874
+- name: k3ndgqbz8y
+  description: DF下限
+  isHidden: true
+  properties:
+    valueType: Float32
+    readWrite: R
+  attributes:
+    NodeName: VD3878
+- name: k3ndnctogy
+  description: 进料数量
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD1200
+- name: k3ndnctogo
+  description: 良品数量
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD1204
+- name: k3ndncto8y
+  description: 容量不良
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD1208
+- name: k3ndnctuge
+  description: ESR不良
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD1232
+- name: k3ndncttga
+  description: 座板CCD检测不良
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD1216
+- name: k3ndnct1gy
+  description: 捺印CCD检测不良
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD1220
+- name: k3ndnct18y
+  description: 漏电NG
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD1228
+- name: k3ndnctuga
+  description: 正负引脚NG
+  isHidden: true
+  properties:
+    valueType: Uint32
+    readWrite: R
+  attributes:
+    NodeName: VD1236
+- name: k3bdcpbo
+  description: 设备报警640
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB640
+- name: k3bdcpb1
+  description: 设备报警642
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB642
+- name: k3bdcpbu
+  description: 设备报警643
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB643
+- name: k3bdcpjo
+  description: 设备报警650
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB650
+- name: k3bdcpjt
+  description: 设备报警651
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB651
+- name: k3bdcpj1
+  description: 设备报警652
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB652
+- name: k3bdcpju
+  description: 设备报警653
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB653
+- name: k3bdcpjw
+  description: 设备报警654
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB654
+- name: k3bdcpji
+  description: 设备报警655
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB655
+- name: k3bdcpjs
+  description: 设备报警656
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB656
+- name: k3bdcpjz
+  description: 设备报警657
+  isHidden: true
+  properties:
+    valueType: Uint8
+    readWrite: R
+  attributes:
+    NodeName: VB657
+- name: jwadrcjqge
+  description: 平送缺料报警
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: M021.2
+- name: jwadrqjqgy
+  description: 捺印不良未排料请取出
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: M029.0
+- name: jwadrqjqgr
+  description: 载带上料检测不良(CCD)
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: M029.1
+- name: jwadrqjqge
+  description: 裸品反极停机请取出产品
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: M029.2
+- name: jwadrqjqgo
+  description: 入载带产品未拉走异常报警
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: M029.4
+- name: jwadrqjqgw
+  description: 盘数到达需要更换载带
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: M029.5
+- name: jwadrqjqga
+  description: 16工位圆盘上下位置异常
+  isHidden: true
+  properties:
+    valueType: Bool
+    readWrite: R
+  attributes:
+    NodeName: M029.6
+deviceCommands:
+- name: Values
+  readWrite: R
+  isHidden: false
+  resourceOperations:
+  - deviceResource: k3ndrp3o
+  - deviceResource: k3ndrp3w
+  - deviceResource: k3muncjo
+  - deviceResource: k3ndgqjtgy
+  - deviceResource: k3ndgqjtgo
+  - deviceResource: k3ndgqbigo
+  - deviceResource: k3ndgqbi8y
+  - deviceResource: k3ndgqbaga
+  - deviceResource: k3ndgqb3gy
+  - deviceResource: k3ndgqbsge
+  - deviceResource: k3ndgqbsga
+  - deviceResource: k3ndgqbzgy
+  - deviceResource: k3ndgqbzgo
+  - deviceResource: k3ndgqbz8y
+  - deviceResource: k3ndnctogy
+  - deviceResource: k3ndnctogo
+  - deviceResource: k3ndncto8y
+  - deviceResource: k3ndnctuge
+  - deviceResource: k3ndncttga
+  - deviceResource: k3ndnct1gy
+  - deviceResource: k3ndnct18y
+  - deviceResource: k3ndnctuga
+  - deviceResource: k3bdcpbo
+  - deviceResource: k3bdcpb1
+  - deviceResource: k3bdcpbu
+  - deviceResource: k3bdcpjo
+  - deviceResource: k3bdcpjt
+  - deviceResource: k3bdcpj1
+  - deviceResource: k3bdcpju
+  - deviceResource: k3bdcpjw
+  - deviceResource: k3bdcpji
+  - deviceResource: k3bdcpjs
+  - deviceResource: k3bdcpjz
+- name: Alarms
+  readWrite: R
+  isHidden: false
+  resourceOperations:
+  - deviceResource: jwadrcjqge
+  - deviceResource: jwadrqjqgy
+  - deviceResource: jwadrqjqgr
+  - deviceResource: jwadrqjqge
+  - deviceResource: jwadrqjqgo
+  - deviceResource: jwadrqjqgw
+  - deviceResource: jwadrqjqga

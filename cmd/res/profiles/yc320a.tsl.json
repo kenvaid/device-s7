@@ -1,0 +1,229 @@
+{
+    "properties": [
+        {
+            "id": "k3ndgcbtge",
+            "name": "总数设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3ndrcboge",
+            "name": "总数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murcbtge",
+            "name": "盒装数设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murcbogy",
+            "name": "盒装数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murcb1ga",
+            "name": "间隔数设定",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murcb1go",
+            "name": "间隔数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3murcbtgo",
+            "name": "补数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munpjsge",
+            "name": "反极总数",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munpjigo",
+            "name": "短脚",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munpji8y",
+            "name": "长脚",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munpjigy",
+            "name": "套管",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "k3munpjsgo",
+            "name": "脚距不正确",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "int"
+            }
+        },
+        {
+            "id": "kah1hpo",
+            "name": "有报警",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "kaaunmts",
+            "name": "运行指示",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        },
+        {
+            "id": "kranhcy",
+            "name": "运行输出",
+            "expands": {
+                "source": "device",
+                "type": [
+                    "report"
+                ],
+                "groupId": "group_1",
+                "groupName": "分组_1"
+            },
+            "valueType": {
+                "type": "boolean"
+            }
+        }
+    ]
+}
