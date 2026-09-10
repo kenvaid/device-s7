@@ -616,15 +616,15 @@ func (s *Driver) getDBInfo(variable string) (dbInfo *DBInfo, err error) {
 
 	//var area, dbNumber, start, amount, wordLen int
 	switch valueArea := variable[0:2]; valueArea {
-	case "EB": //input byte
-	case "EW": //input word
-	case "ED": //Input double-word
-	case "AB": //Output byte
-	case "AW": //Output word
-	case "AD": //Output double-word
-	case "MB": //Memory byte
-	case "MW": //Memory word
-	case "MD": //Memory double-word
+	// case "EB": //input byte
+	// case "EW": //input word
+	// case "ED": //Input double-word
+	// case "AB": //Output byte
+	// case "AW": //Output word
+	// case "AD": //Output double-word
+	// case "MB": //Memory byte
+	// case "MW": //Memory word
+	// case "MD": //Memory double-word
 	case "DB": //Data Block
 		// Area ID
 		// s7areape = 0x81 //process inputs
