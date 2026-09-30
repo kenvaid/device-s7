@@ -1,5 +1,7 @@
 # device-s7 上游同步评估（2026-09-30）
 
+后续操作：已按本报告方案执行上游合并，另保留 origin/main 的 M 区修复历史；正式工作区的测试、lint、race 和模拟器结果见 [合并记录](D:/workspace/iot/edgex/device-s7/doc/review/device-s7-upstream-merge-2026-09-30.md)。以下保留合并前的评估状态。
+
 建议安排合并上游 main，以同步正式 SDK、依赖和构建工具；这不是修复 S7 读写或提高吞吐量的紧急更新。合并必须保留本地驱动修复、kenvaid/gos7 最新版本及用户的 profile 修改。隔离合并副本已通过测试、vet、build，但尚未在正式仓库执行合并或推送。
 
 ## 比较范围

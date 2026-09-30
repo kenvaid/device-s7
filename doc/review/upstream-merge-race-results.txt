@@ -1,0 +1,6 @@
+WSL Go 1.26.4; Windows module cache; GOPROXY=off; go test -race -count=1 -timeout=90s ./...
+?   	github.com/edgexfoundry/device-s7	[no test files]
+?   	github.com/edgexfoundry/device-s7/cmd	[no test files]
+ok  	github.com/edgexfoundry/device-s7/doc/review/pythonsim	1.020s
+ok  	github.com/edgexfoundry/device-s7/doc/review/serverdemo	1.020s
+ok  	github.com/edgexfoundry/device-s7/internal/driver	1.022s

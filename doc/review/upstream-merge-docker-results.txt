@@ -1,0 +1,81 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile:
+#1 transferring dockerfile: 1.62kB 0.0s done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/alpine:3.22
+#2 ...
+
+#3 [internal] load metadata for docker.io/library/golang:1.25-alpine3.22
+#3 DONE 2.7s
+
+#2 [internal] load metadata for docker.io/library/alpine:3.22
+#2 DONE 2.8s
+
+#4 [internal] load .dockerignore
+#4 transferring context:
+#4 transferring context: 2B 0.0s done
+#4 DONE 0.0s
+
+#5 [builder 1/7] FROM docker.io/library/golang:1.25-alpine3.22@sha256:65b4400aee0927412e9ed791a11893273a49d55df24841f7599660fb80dae464
+#5 resolve docker.io/library/golang:1.25-alpine3.22@sha256:65b4400aee0927412e9ed791a11893273a49d55df24841f7599660fb80dae464 0.0s done
+#5 CACHED
+
+#6 [builder 2/7] WORKDIR /device-s7
+#6 DONE 0.0s
+
+#7 [builder 3/7] RUN apk add --update --no-cache make git gcc libc-dev
+#7 0.245 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz
+#7 0.728 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz
+#7 1.502 (1/25) Installing libgcc (14.2.0-r6)
+#7 ...
+
+#8 [internal] load build context
+#8 transferring context: 53.63MB 1.8s done
+#8 DONE 1.9s
+
+#7 [builder 3/7] RUN apk add --update --no-cache make git gcc libc-dev
+#7 1.812 (2/25) Installing jansson (2.14.1-r0)
+#7 1.874 (3/25) Installing libstdc++ (14.2.0-r6)
+#7 2.122 (4/25) Installing zstd-libs (1.5.7-r0)
+#7 2.368 (5/25) Installing binutils (2.44-r3)
+#7 ...
+
+#9 [stage-1 1/7] FROM docker.io/library/alpine:3.22@sha256:5291449c3df73caf6ed85e649dec1b9e818b39a5d8c871e97afc13e9cd5e8fa8
+#9 resolve docker.io/library/alpine:3.22@sha256:5291449c3df73caf6ed85e649dec1b9e818b39a5d8c871e97afc13e9cd5e8fa8 0.0s done
+#9 sha256:53f8f5e03afd86ade91b7aa57a749f5a3d1419c113be5d8c10e7ee61bb5ab887 3.79MB / 3.79MB 2.2s done
+#9 extracting sha256:53f8f5e03afd86ade91b7aa57a749f5a3d1419c113be5d8c10e7ee61bb5ab887 0.1s done
+#9 DONE 2.4s
+
+#10 [stage-1 2/7] RUN apk add --update --no-cache dumb-init
+#10 0.196 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz
+#10 0.839 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz
+#10 ...
+
+#7 [builder 3/7] RUN apk add --update --no-cache make git gcc libc-dev
+#7 12.22 (6/25) Installing libgomp (14.2.0-r6)
+#7 13.77 (7/25) Installing libatomic (14.2.0-r6)
+#7 13.94 (8/25) Installing gmp (6.3.0-r3)
+#7 ...
+
+#10 [stage-1 2/7] RUN apk add --update --no-cache dumb-init
+#10 12.38 (1/1) Installing dumb-init (1.2.5-r3)
+#10 12.66 Executing busybox-1.37.0-r20.trigger
+#10 12.67 OK: 7 MiB in 17 packages
+#10 DONE 12.8s
+
+#11 [stage-1 3/7] RUN apk --no-cache upgrade
+#11 0.230 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz
+#11 0.672 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz
+#11 1.386 OK: 7 MiB in 17 packages
+#11 DONE 1.5s
+
+#7 [builder 3/7] RUN apk add --update --no-cache make git gcc libc-dev
+#7 15.47 (9/25) Installing isl26 (0.26-r1)
+#7 23.82 (10/25) Installing mpfr4 (4.2.1_p1-r0)
+#7 26.64 (11/25) Installing mpc1 (1.3.1-r1)
+#7 27.11 (12/25) Installing gcc (14.2.0-r6)
+#7 CANCELED
+ERROR: failed to build: failed to solve: Canceled: context canceled

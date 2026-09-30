@@ -6,9 +6,15 @@
 - [go-mod-bootstrap](https://github.com/edgexfoundry/go-mod-bootstrap/blob/main/CHANGELOG.md)
 - [go-mod-core-contracts](https://github.com/edgexfoundry/go-mod-core-contracts/blob/main/CHANGELOG.md)
 - [go-mod-messaging](https://github.com/edgexfoundry/go-mod-messaging/blob/main/CHANGELOG.md)
-- [go-mod-registry](https://github.com/edgexfoundry/go-mod-registry/blob/main/CHANGELOG.md) 
+- [go-mod-registry](https://github.com/edgexfoundry/go-mod-registry/blob/main/CHANGELOG.md)
 - [go-mod-secrets](https://github.com/edgexfoundry/go-mod-secrets/blob/main/CHANGELOG.md) (indirect dependency)
 - [go-mod-configuration](https://github.com/edgexfoundry/go-mod-configuration/blob/main/CHANGELOG.md) (indirect dependency)
+
+## [4.0.2] - 2026-05-31
+
+### 👷 Build
+- Update goVersion to 1.25 and golangci-lint to 2.5.0([#d47f78a](https://github.com/edgexfoundry/device-s7/commit/d47f78a))
+
 
 ## [4.0.0] Odessa - 2025-03-12 (Only compatible with the 4.x releases)
 ### ✨  Features

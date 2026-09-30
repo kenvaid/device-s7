@@ -32,7 +32,7 @@
     --- PASS: TestPythonSnap7Counter/227 (0.00s)
     --- PASS: TestPythonSnap7Counter/300 (0.00s)
 === RUN   TestPythonSnap7MixedCharReal
-    integration_test.go:188: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+    integration_test.go:189: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
 === RUN   TestPythonSnap7MixedCharReal/[0_1_2_3_4_5_6]
 === RUN   TestPythonSnap7MixedCharReal/[6_1_0_5_4_3_2]
 === RUN   TestPythonSnap7MixedCharReal/[1_6_5_4_0_2_3]
@@ -41,10 +41,10 @@
     --- PASS: TestPythonSnap7MixedCharReal/[6_1_0_5_4_3_2] (0.01s)
     --- PASS: TestPythonSnap7MixedCharReal/[1_6_5_4_0_2_3] (0.01s)
 === RUN   TestPythonSnap7MixedCounter
-    integration_test.go:241: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+    integration_test.go:242: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
 --- PASS: TestPythonSnap7MixedCounter (0.01s)
 === RUN   TestPythonSnap7BoundsAndItemErrors
-    integration_test.go:275: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+    integration_test.go:276: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
 === RUN   TestPythonSnap7BoundsAndItemErrors/M
 === RUN   TestPythonSnap7BoundsAndItemErrors/I
 === RUN   TestPythonSnap7BoundsAndItemErrors/Q
@@ -52,18 +52,152 @@
 === RUN   TestPythonSnap7BoundsAndItemErrors/PartialMultiRead
 --- PASS: TestPythonSnap7BoundsAndItemErrors (0.03s)
     --- PASS: TestPythonSnap7BoundsAndItemErrors/M (0.00s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/I (0.01s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/Q (0.00s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/PartialMultiWrite (0.01s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/PartialMultiRead (0.00s)
+=== RUN   TestPythonSnap7ConcurrentAreas
+    integration_test.go:337: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7ConcurrentAreas/shared=true
+    integration_test.go:382: workers=8 read/write requests=800
+=== RUN   TestPythonSnap7ConcurrentAreas/shared=false
+    integration_test.go:382: workers=8 read/write requests=800
+--- PASS: TestPythonSnap7ConcurrentAreas (0.14s)
+    --- PASS: TestPythonSnap7ConcurrentAreas/shared=true (0.08s)
+    --- PASS: TestPythonSnap7ConcurrentAreas/shared=false (0.06s)
+=== RUN   TestPythonSnap7ByteAreas
+    integration_test.go:106: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7ByteAreas/M
+=== RUN   TestPythonSnap7ByteAreas/I
+=== RUN   TestPythonSnap7ByteAreas/Q
+--- PASS: TestPythonSnap7ByteAreas (0.07s)
+    --- PASS: TestPythonSnap7ByteAreas/M (0.02s)
+    --- PASS: TestPythonSnap7ByteAreas/I (0.02s)
+    --- PASS: TestPythonSnap7ByteAreas/Q (0.02s)
+=== RUN   TestPythonSnap7Bits
+    integration_test.go:136: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7Bits/M
+=== RUN   TestPythonSnap7Bits/I
+=== RUN   TestPythonSnap7Bits/Q
+--- PASS: TestPythonSnap7Bits (0.06s)
+    --- PASS: TestPythonSnap7Bits/M (0.02s)
+    --- PASS: TestPythonSnap7Bits/I (0.02s)
+    --- PASS: TestPythonSnap7Bits/Q (0.02s)
+=== RUN   TestPythonSnap7Counter
+    integration_test.go:162: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7Counter/1
+=== RUN   TestPythonSnap7Counter/3
+=== RUN   TestPythonSnap7Counter/225
+=== RUN   TestPythonSnap7Counter/226
+=== RUN   TestPythonSnap7Counter/227
+=== RUN   TestPythonSnap7Counter/300
+--- PASS: TestPythonSnap7Counter (0.03s)
+    --- PASS: TestPythonSnap7Counter/1 (0.00s)
+    --- PASS: TestPythonSnap7Counter/3 (0.01s)
+    --- PASS: TestPythonSnap7Counter/225 (0.00s)
+    --- PASS: TestPythonSnap7Counter/226 (0.00s)
+    --- PASS: TestPythonSnap7Counter/227 (0.00s)
+    --- PASS: TestPythonSnap7Counter/300 (0.01s)
+=== RUN   TestPythonSnap7MixedCharReal
+    integration_test.go:189: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7MixedCharReal/[0_1_2_3_4_5_6]
+=== RUN   TestPythonSnap7MixedCharReal/[6_1_0_5_4_3_2]
+=== RUN   TestPythonSnap7MixedCharReal/[1_6_5_4_0_2_3]
+--- PASS: TestPythonSnap7MixedCharReal (0.03s)
+    --- PASS: TestPythonSnap7MixedCharReal/[0_1_2_3_4_5_6] (0.01s)
+    --- PASS: TestPythonSnap7MixedCharReal/[6_1_0_5_4_3_2] (0.01s)
+    --- PASS: TestPythonSnap7MixedCharReal/[1_6_5_4_0_2_3] (0.01s)
+=== RUN   TestPythonSnap7MixedCounter
+    integration_test.go:242: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+--- PASS: TestPythonSnap7MixedCounter (0.01s)
+=== RUN   TestPythonSnap7BoundsAndItemErrors
+    integration_test.go:276: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7BoundsAndItemErrors/M
+=== RUN   TestPythonSnap7BoundsAndItemErrors/I
+=== RUN   TestPythonSnap7BoundsAndItemErrors/Q
+=== RUN   TestPythonSnap7BoundsAndItemErrors/PartialMultiWrite
+=== RUN   TestPythonSnap7BoundsAndItemErrors/PartialMultiRead
+--- PASS: TestPythonSnap7BoundsAndItemErrors (0.03s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/M (0.01s)
     --- PASS: TestPythonSnap7BoundsAndItemErrors/I (0.00s)
     --- PASS: TestPythonSnap7BoundsAndItemErrors/Q (0.00s)
     --- PASS: TestPythonSnap7BoundsAndItemErrors/PartialMultiWrite (0.01s)
     --- PASS: TestPythonSnap7BoundsAndItemErrors/PartialMultiRead (0.00s)
 === RUN   TestPythonSnap7ConcurrentAreas
-    integration_test.go:336: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+    integration_test.go:337: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
 === RUN   TestPythonSnap7ConcurrentAreas/shared=true
-    integration_test.go:381: workers=8 read/write requests=800
+    integration_test.go:382: workers=8 read/write requests=800
 === RUN   TestPythonSnap7ConcurrentAreas/shared=false
-    integration_test.go:381: workers=8 read/write requests=800
---- PASS: TestPythonSnap7ConcurrentAreas (0.13s)
-    --- PASS: TestPythonSnap7ConcurrentAreas/shared=true (0.07s)
-    --- PASS: TestPythonSnap7ConcurrentAreas/shared=false (0.05s)
+    integration_test.go:382: workers=8 read/write requests=800
+--- PASS: TestPythonSnap7ConcurrentAreas (0.15s)
+    --- PASS: TestPythonSnap7ConcurrentAreas/shared=true (0.09s)
+    --- PASS: TestPythonSnap7ConcurrentAreas/shared=false (0.06s)
+=== RUN   TestPythonSnap7ByteAreas
+    integration_test.go:106: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7ByteAreas/M
+=== RUN   TestPythonSnap7ByteAreas/I
+=== RUN   TestPythonSnap7ByteAreas/Q
+--- PASS: TestPythonSnap7ByteAreas (0.08s)
+    --- PASS: TestPythonSnap7ByteAreas/M (0.03s)
+    --- PASS: TestPythonSnap7ByteAreas/I (0.02s)
+    --- PASS: TestPythonSnap7ByteAreas/Q (0.02s)
+=== RUN   TestPythonSnap7Bits
+    integration_test.go:136: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7Bits/M
+=== RUN   TestPythonSnap7Bits/I
+=== RUN   TestPythonSnap7Bits/Q
+--- PASS: TestPythonSnap7Bits (0.06s)
+    --- PASS: TestPythonSnap7Bits/M (0.02s)
+    --- PASS: TestPythonSnap7Bits/I (0.02s)
+    --- PASS: TestPythonSnap7Bits/Q (0.02s)
+=== RUN   TestPythonSnap7Counter
+    integration_test.go:162: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7Counter/1
+=== RUN   TestPythonSnap7Counter/3
+=== RUN   TestPythonSnap7Counter/225
+=== RUN   TestPythonSnap7Counter/226
+=== RUN   TestPythonSnap7Counter/227
+=== RUN   TestPythonSnap7Counter/300
+--- PASS: TestPythonSnap7Counter (0.03s)
+    --- PASS: TestPythonSnap7Counter/1 (0.00s)
+    --- PASS: TestPythonSnap7Counter/3 (0.00s)
+    --- PASS: TestPythonSnap7Counter/225 (0.00s)
+    --- PASS: TestPythonSnap7Counter/226 (0.00s)
+    --- PASS: TestPythonSnap7Counter/227 (0.00s)
+    --- PASS: TestPythonSnap7Counter/300 (0.00s)
+=== RUN   TestPythonSnap7MixedCharReal
+    integration_test.go:189: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7MixedCharReal/[0_1_2_3_4_5_6]
+=== RUN   TestPythonSnap7MixedCharReal/[6_1_0_5_4_3_2]
+=== RUN   TestPythonSnap7MixedCharReal/[1_6_5_4_0_2_3]
+--- PASS: TestPythonSnap7MixedCharReal (0.03s)
+    --- PASS: TestPythonSnap7MixedCharReal/[0_1_2_3_4_5_6] (0.01s)
+    --- PASS: TestPythonSnap7MixedCharReal/[6_1_0_5_4_3_2] (0.01s)
+    --- PASS: TestPythonSnap7MixedCharReal/[1_6_5_4_0_2_3] (0.01s)
+=== RUN   TestPythonSnap7MixedCounter
+    integration_test.go:242: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+--- PASS: TestPythonSnap7MixedCounter (0.01s)
+=== RUN   TestPythonSnap7BoundsAndItemErrors
+    integration_test.go:276: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7BoundsAndItemErrors/M
+=== RUN   TestPythonSnap7BoundsAndItemErrors/I
+=== RUN   TestPythonSnap7BoundsAndItemErrors/Q
+=== RUN   TestPythonSnap7BoundsAndItemErrors/PartialMultiWrite
+=== RUN   TestPythonSnap7BoundsAndItemErrors/PartialMultiRead
+--- PASS: TestPythonSnap7BoundsAndItemErrors (0.03s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/M (0.01s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/I (0.00s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/Q (0.00s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/PartialMultiWrite (0.01s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/PartialMultiRead (0.00s)
+=== RUN   TestPythonSnap7ConcurrentAreas
+    integration_test.go:337: python-snap7=3.2.0 mode=typed address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7ConcurrentAreas/shared=true
+    integration_test.go:382: workers=8 read/write requests=800
+=== RUN   TestPythonSnap7ConcurrentAreas/shared=false
+    integration_test.go:382: workers=8 read/write requests=800
+--- PASS: TestPythonSnap7ConcurrentAreas (0.16s)
+    --- PASS: TestPythonSnap7ConcurrentAreas/shared=true (0.09s)
+    --- PASS: TestPythonSnap7ConcurrentAreas/shared=false (0.07s)
 PASS
-ok  	github.com/edgexfoundry/device-s7/doc/review/pythonsim	0.919s
+ok  	github.com/edgexfoundry/device-s7/doc/review/pythonsim	1.766s

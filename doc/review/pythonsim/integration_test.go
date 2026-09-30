@@ -160,15 +160,16 @@ func TestPythonSnap7Bits(t *testing.T) {
 
 func TestPythonSnap7Counter(t *testing.T) {
 	f := newFixture(t)
-	for _, n := range []int{1, 3, 225, 226, 227, 300} {
+	for _, count := range []uint16{1, 3, 225, 226, 227, 300} {
+		n := int(count)
 		t.Run(fmt.Sprint(n), func(t *testing.T) {
 			c := f.connect(t)
 			expected := f.memory()["CT"]
 			const start = 7
 			want := make([]byte, n*2)
-			for i := 0; i < n; i++ {
-				value := (i*31 + n) % 1000
-				raw := uint16((value/100)<<8 | ((value/10)%10)<<4 | value%10)
+			for i := uint16(0); i < count; i++ {
+				value := (i*31 + count) % 1000
+				raw := (value/100)<<8 | ((value/10)%10)<<4 | value%10
 				binary.BigEndian.PutUint16(want[i*2:], raw)
 			}
 			if err := c.AGWriteCT(start, n, want); err != nil {
