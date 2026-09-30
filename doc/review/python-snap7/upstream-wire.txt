@@ -1,0 +1,47 @@
+=== RUN   TestPythonSnap7Counter
+    integration_test.go:159: python-snap7=3.2.0 mode=upstream address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7Counter/1
+S7 s7: sending 03 00 00 16 11 e0 00 00 00 01 00 c0 01 0a c1 02 01 00 c2 02 01 02
+S7 s7: received 03 00 00 16 11 d0 00 01 00 01 00 c0 01 0a c1 02 01 00 c2 02 01 02
+S7 s7: sending 03 00 00 19 02 f0 80 32 01 00 00 00 01 00 08 00 00 f0 00 00 01 00 01 01 e0
+S7 s7: received 03 00 00 1b 02 f0 80 32 03 00 00 00 01 00 08 00 00 00 00 f0 00 00 01 00 01 01 e0
+S7 s7: sending 03 00 00 25 02 f0 80 32 01 00 00 00 02 00 0e 00 06 05 01 12 0a 10 1c 00 01 00 00 1c 00 00 07 00 09 00 02 00 01
+S7 s7: received 03 00 00 16 02 f0 80 32 03 00 00 00 02 00 02 00 01 00 00 05 01 ff
+S7 s7: sending 03 00 00 1f 02 f0 80 32 01 00 00 00 03 00 0e 00 00 04 01 12 0a 10 1c 00 01 00 00 1c 00 00 07
+S7 s7: received 03 00 00 1b 02 f0 80 32 03 00 00 00 03 00 02 00 06 00 00 04 01 ff 04 00 10 00 01
+    integration_test.go:178: read: s7: read item transport or payload length mismatch equal= false
+--- FAIL: TestPythonSnap7Counter (0.01s)
+    --- FAIL: TestPythonSnap7Counter/1 (0.00s)
+=== RUN   TestPythonSnap7MixedCharReal
+    integration_test.go:185: python-snap7=3.2.0 mode=upstream address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7MixedCharReal/[0_1_2_3_4_5_6]
+S7 s7: sending 03 00 00 16 11 e0 00 00 00 01 00 c0 01 0a c1 02 01 00 c2 02 01 02
+S7 s7: received 03 00 00 16 11 d0 00 01 00 01 00 c0 01 0a c1 02 01 00 c2 02 01 02
+S7 s7: sending 03 00 00 19 02 f0 80 32 01 00 00 00 01 00 08 00 00 f0 00 00 01 00 01 01 e0
+S7 s7: received 03 00 00 1b 02 f0 80 32 03 00 00 00 01 00 08 00 00 00 00 f0 00 00 01 00 01 01 e0
+S7 s7: sending 03 00 00 bb 02 f0 80 32 01 00 00 00 02 00 56 00 54 05 07 12 0a 10 02 00 03 00 00 83 00 10 00 12 0a 10 03 00 03 00 00 81 00 10 00 12 0a 10 04 00 03 00 00 82 00 10 00 12 0a 10 05 00 03 00 00 83 00 11 00 12 0a 10 06 00 03 00 00 81 00 11 00 12 0a 10 07 00 03 00 00 82 00 11 00 12 0a 10 08 00 03 00 00 83 00 12 00 00 04 00 18 01 02 03 00 00 09 00 03 53 37 21 00 00 04 00 30 02 27 4c 71 96 bb 00 05 00 30 03 28 4d 72 97 bc 00 04 00 60 04 29 4e 73 98 bd e2 07 2c 51 76 9b 00 05 00 60 05 2a 4f 74 99 be e3 08 2d 52 77 9c 00 07 00 0c 3f a0 00 00 c1 48 00 00 46 40 e7 00
+S7 s7: received 03 00 00 16 02 f0 80 32 03 00 00 00 02 00 02 00 01 00 00 05 01 ff
+    integration_test.go:209: mixed write: s7: invalid write reply item count/length
+=== RUN   TestPythonSnap7MixedCharReal/[6_1_0_5_4_3_2]
+S7 s7: sending 03 00 00 16 11 e0 00 00 00 01 00 c0 01 0a c1 02 01 00 c2 02 01 02
+S7 s7: received 03 00 00 16 11 d0 00 01 00 01 00 c0 01 0a c1 02 01 00 c2 02 01 02
+S7 s7: sending 03 00 00 19 02 f0 80 32 01 00 00 00 01 00 08 00 00 f0 00 00 01 00 01 01 e0
+S7 s7: received 03 00 00 1b 02 f0 80 32 03 00 00 00 01 00 08 00 00 00 00 f0 00 00 01 00 01 01 e0
+S7 s7: sending 03 00 00 bb 02 f0 80 32 01 00 00 00 02 00 56 00 54 05 07 12 0a 10 08 00 03 00 00 83 00 12 00 12 0a 10 03 00 03 00 00 81 00 10 00 12 0a 10 02 00 03 00 00 83 00 10 00 12 0a 10 07 00 03 00 00 82 00 11 00 12 0a 10 06 00 03 00 00 81 00 11 00 12 0a 10 05 00 03 00 00 83 00 11 00 12 0a 10 04 00 03 00 00 82 00 10 00 00 07 00 0c 3f a0 00 00 c1 48 00 00 46 40 e7 00 00 09 00 03 53 37 21 00 00 04 00 18 01 02 03 00 00 05 00 60 05 2a 4f 74 99 be e3 08 2d 52 77 9c 00 04 00 60 04 29 4e 73 98 bd e2 07 2c 51 76 9b 00 05 00 30 03 28 4d 72 97 bc 00 04 00 30 02 27 4c 71 96 bb
+S7 s7: received 03 00 00 16 02 f0 80 32 03 00 00 00 02 00 02 00 01 00 00 05 01 ff
+    integration_test.go:209: mixed write: s7: invalid write reply item count/length
+=== RUN   TestPythonSnap7MixedCharReal/[1_6_5_4_0_2_3]
+S7 s7: sending 03 00 00 16 11 e0 00 00 00 01 00 c0 01 0a c1 02 01 00 c2 02 01 02
+S7 s7: received 03 00 00 16 11 d0 00 01 00 01 00 c0 01 0a c1 02 01 00 c2 02 01 02
+S7 s7: sending 03 00 00 19 02 f0 80 32 01 00 00 00 01 00 08 00 00 f0 00 00 01 00 01 01 e0
+S7 s7: received 03 00 00 1b 02 f0 80 32 03 00 00 00 01 00 08 00 00 00 00 f0 00 00 01 00 01 01 e0
+S7 s7: sending 03 00 00 bb 02 f0 80 32 01 00 00 00 02 00 56 00 54 05 07 12 0a 10 03 00 03 00 00 81 00 10 00 12 0a 10 08 00 03 00 00 83 00 12 00 12 0a 10 07 00 03 00 00 82 00 11 00 12 0a 10 06 00 03 00 00 81 00 11 00 12 0a 10 02 00 03 00 00 83 00 10 00 12 0a 10 04 00 03 00 00 82 00 10 00 12 0a 10 05 00 03 00 00 83 00 11 00 00 09 00 03 53 37 21 00 00 07 00 0c 3f a0 00 00 c1 48 00 00 46 40 e7 00 00 05 00 60 05 2a 4f 74 99 be e3 08 2d 52 77 9c 00 04 00 60 04 29 4e 73 98 bd e2 07 2c 51 76 9b 00 04 00 18 01 02 03 00 00 04 00 30 02 27 4c 71 96 bb 00 05 00 30 03 28 4d 72 97 bc
+S7 s7: received 03 00 00 16 02 f0 80 32 03 00 00 00 02 00 02 00 01 00 00 05 01 ff
+    integration_test.go:209: mixed write: s7: invalid write reply item count/length
+--- FAIL: TestPythonSnap7MixedCharReal (0.01s)
+    --- FAIL: TestPythonSnap7MixedCharReal/[0_1_2_3_4_5_6] (0.00s)
+    --- FAIL: TestPythonSnap7MixedCharReal/[6_1_0_5_4_3_2] (0.00s)
+    --- FAIL: TestPythonSnap7MixedCharReal/[1_6_5_4_0_2_3] (0.00s)
+FAIL
+FAIL	github.com/edgexfoundry/device-s7/doc/review/pythonsim	0.582s
+FAIL

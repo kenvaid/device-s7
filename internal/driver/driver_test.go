@@ -54,7 +54,7 @@ func TestDriver_getDBInfo(t *testing.T) {
 			wantDbInfo: &DBInfo{
 				Area:       0x84,
 				DBNumber:   1,
-				Start:      800,
+				Start:      100,
 				Amount:     1,
 				WordLength: s7wlbit,
 				DBArray:    []string{"DB1", "DBX100", "0"},
@@ -78,5 +78,29 @@ func TestDriver_getDBInfo(t *testing.T) {
 				t.Errorf("getDBInfo() gotDbInfo = %v, want %v", gotDbInfo, tt.wantDbInfo)
 			}
 		})
+	}
+}
+
+func TestS7AddressByteAndBitContract(t *testing.T) {
+	s := &Driver{lc: logger.NewClient("S7", "Error")}
+	for _, tc := range []struct {
+		address              string
+		area, db, start, bit int
+	}{
+		{"DB1.DBX100.3", 0x84, 1, 100, 3}, {"M100.3", 0x83, 0, 100, 3},
+		{"I100.3", 0x81, 0, 100, 3}, {"Q100.3", 0x82, 0, 100, 3},
+		{"V100.3", 0x84, 1, 100, 3}, {"DB65535.DBX40000.7", 0x84, 65535, 40000, 7},
+		{"EB100", 0x81, 0, 100, 0}, {"AB100", 0x82, 0, 100, 0}, {"MB100", 0x83, 0, 100, 0},
+		{"C100", 0x1c, 0, 100, 0}, {"T100", 0x1d, 0, 100, 0},
+	} {
+		info, err := s.getDBInfo(tc.address)
+		if err != nil || info.Area != tc.area || info.DBNumber != tc.db || info.Start != tc.start || info.Bit != tc.bit {
+			t.Fatalf("%s: %+v %v", tc.address, info, err)
+		}
+	}
+	for _, address := range []string{"", "D", "DB1.X", "DB1.DBX0", "DB1.DBX0.8", "DB-1.DBB0", "M0.8", "I-1.0", "Q0.-1", "DB65536.DBB0", "DB1.DBB2097152", "DB1.DBW2097151", "DB1.DBB0.0", "IB", "C65536"} {
+		if _, err := s.getDBInfo(address); err == nil {
+			t.Fatalf("invalid address accepted: %s", address)
+		}
 	}
 }

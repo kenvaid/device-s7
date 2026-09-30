@@ -1,0 +1,87 @@
+=== RUN   TestPythonSnap7ByteAreas
+    integration_test.go:106: python-snap7=3.2.0 mode=upstream address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7ByteAreas/M
+=== RUN   TestPythonSnap7ByteAreas/I
+=== RUN   TestPythonSnap7ByteAreas/Q
+--- PASS: TestPythonSnap7ByteAreas (0.06s)
+    --- PASS: TestPythonSnap7ByteAreas/M (0.02s)
+    --- PASS: TestPythonSnap7ByteAreas/I (0.02s)
+    --- PASS: TestPythonSnap7ByteAreas/Q (0.02s)
+=== RUN   TestPythonSnap7Bits
+    integration_test.go:136: python-snap7=3.2.0 mode=upstream address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7Bits/M
+    integration_test.go:151: M physical byte offset=17 got=01 expected=21
+=== RUN   TestPythonSnap7Bits/I
+    integration_test.go:151: I physical byte offset=17 got=01 expected=41
+=== RUN   TestPythonSnap7Bits/Q
+    integration_test.go:151: Q physical byte offset=17 got=01 expected=5f
+--- FAIL: TestPythonSnap7Bits (0.01s)
+    --- FAIL: TestPythonSnap7Bits/M (0.00s)
+    --- FAIL: TestPythonSnap7Bits/I (0.00s)
+    --- FAIL: TestPythonSnap7Bits/Q (0.00s)
+=== RUN   TestPythonSnap7Counter
+    integration_test.go:162: python-snap7=3.2.0 mode=upstream address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7Counter/1
+    integration_test.go:181: read: s7: read item transport or payload length mismatch equal= false
+=== RUN   TestPythonSnap7Counter/3
+    integration_test.go:181: read: s7: read item transport or payload length mismatch equal= false
+=== RUN   TestPythonSnap7Counter/225
+    integration_test.go:181: read: s7: read item transport or payload length mismatch equal= false
+=== RUN   TestPythonSnap7Counter/226
+    integration_test.go:181: read: s7: read item transport or payload length mismatch equal= false
+=== RUN   TestPythonSnap7Counter/227
+    integration_test.go:181: read: s7: read item transport or payload length mismatch equal= false
+=== RUN   TestPythonSnap7Counter/300
+    integration_test.go:181: read: s7: read item transport or payload length mismatch equal= false
+--- FAIL: TestPythonSnap7Counter (0.03s)
+    --- FAIL: TestPythonSnap7Counter/1 (0.00s)
+    --- FAIL: TestPythonSnap7Counter/3 (0.00s)
+    --- FAIL: TestPythonSnap7Counter/225 (0.00s)
+    --- FAIL: TestPythonSnap7Counter/226 (0.00s)
+    --- FAIL: TestPythonSnap7Counter/227 (0.00s)
+    --- FAIL: TestPythonSnap7Counter/300 (0.00s)
+=== RUN   TestPythonSnap7MixedCharReal
+    integration_test.go:188: python-snap7=3.2.0 mode=upstream address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7MixedCharReal/[0_1_2_3_4_5_6]
+    integration_test.go:212: mixed write: s7: invalid write reply item count/length
+=== RUN   TestPythonSnap7MixedCharReal/[6_1_0_5_4_3_2]
+    integration_test.go:212: mixed write: s7: invalid write reply item count/length
+=== RUN   TestPythonSnap7MixedCharReal/[1_6_5_4_0_2_3]
+    integration_test.go:212: mixed write: s7: invalid write reply item count/length
+--- FAIL: TestPythonSnap7MixedCharReal (0.01s)
+    --- FAIL: TestPythonSnap7MixedCharReal/[0_1_2_3_4_5_6] (0.00s)
+    --- FAIL: TestPythonSnap7MixedCharReal/[6_1_0_5_4_3_2] (0.00s)
+    --- FAIL: TestPythonSnap7MixedCharReal/[1_6_5_4_0_2_3] (0.00s)
+=== RUN   TestPythonSnap7MixedCounter
+    integration_test.go:241: python-snap7=3.2.0 mode=upstream address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+    integration_test.go:246: s7: invalid write reply item count/length
+--- FAIL: TestPythonSnap7MixedCounter (0.00s)
+=== RUN   TestPythonSnap7BoundsAndItemErrors
+    integration_test.go:275: python-snap7=3.2.0 mode=upstream address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7BoundsAndItemErrors/M
+    integration_test.go:290: M physical byte offset=8190 got=11 expected=de
+=== RUN   TestPythonSnap7BoundsAndItemErrors/I
+    integration_test.go:290: I physical byte offset=8190 got=11 expected=fd
+=== RUN   TestPythonSnap7BoundsAndItemErrors/Q
+    integration_test.go:290: Q physical byte offset=8190 got=11 expected=1c
+=== RUN   TestPythonSnap7BoundsAndItemErrors/PartialMultiWrite
+    integration_test.go:305: s7: invalid write reply item count/length
+=== RUN   TestPythonSnap7BoundsAndItemErrors/PartialMultiRead
+--- FAIL: TestPythonSnap7BoundsAndItemErrors (0.02s)
+    --- FAIL: TestPythonSnap7BoundsAndItemErrors/M (0.01s)
+    --- FAIL: TestPythonSnap7BoundsAndItemErrors/I (0.00s)
+    --- FAIL: TestPythonSnap7BoundsAndItemErrors/Q (0.00s)
+    --- FAIL: TestPythonSnap7BoundsAndItemErrors/PartialMultiWrite (0.00s)
+    --- PASS: TestPythonSnap7BoundsAndItemErrors/PartialMultiRead (0.00s)
+=== RUN   TestPythonSnap7ConcurrentAreas
+    integration_test.go:336: python-snap7=3.2.0 mode=upstream address=127.0.0.1:1102 areas=map[CT:2048 DB1:8192 DB2:8192 DB3:8192 I:8192 M:8192 Q:8192 TM:2048]
+=== RUN   TestPythonSnap7ConcurrentAreas/shared=true
+    integration_test.go:381: workers=8 read/write requests=800
+=== RUN   TestPythonSnap7ConcurrentAreas/shared=false
+    integration_test.go:381: workers=8 read/write requests=800
+--- PASS: TestPythonSnap7ConcurrentAreas (0.13s)
+    --- PASS: TestPythonSnap7ConcurrentAreas/shared=true (0.07s)
+    --- PASS: TestPythonSnap7ConcurrentAreas/shared=false (0.06s)
+FAIL
+FAIL	github.com/edgexfoundry/device-s7/doc/review/pythonsim	0.834s
+FAIL

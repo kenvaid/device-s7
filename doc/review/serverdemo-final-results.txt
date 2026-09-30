@@ -1,0 +1,266 @@
+=== RUN   TestServerDemoReadWrite
+    serverdemo_test.go:67: original DB data saved to D:\workspace\iot\edgex\device-s7\doc\review\serverdemo-original-db-20260930-154301.json
+=== RUN   TestServerDemoReadWrite/DBChunking
+=== RUN   TestServerDemoReadWrite/Bits
+=== RUN   TestServerDemoReadWrite/MultiTypesAndOddPadding
+=== RUN   TestServerDemoReadWrite/Multi20Items
+=== RUN   TestServerDemoReadWrite/DBFillAndDBGet
+=== RUN   TestServerDemoReadWrite/AddressSyntax
+    serverdemo_test.go:222: DB1.DBW0=4660
+=== RUN   TestServerDemoReadWrite/ErrorsPreserveSession
+=== RUN   TestServerDemoReadWrite/SharedConnection
+    serverdemo_test.go:292: workers=8 iterations=100 requests=1600 elapsed=144.6181ms requests/s=11064
+=== RUN   TestServerDemoReadWrite/IndependentConnections
+    serverdemo_test.go:292: workers=8 iterations=100 requests=1600 elapsed=21.1139ms requests/s=75779
+=== NAME  TestServerDemoReadWrite
+    serverdemo_test.go:82: original DB1/DB2/DB3 data restored and verified
+--- PASS: TestServerDemoReadWrite (0.19s)
+    --- PASS: TestServerDemoReadWrite/DBChunking (0.01s)
+    --- PASS: TestServerDemoReadWrite/Bits (0.00s)
+    --- PASS: TestServerDemoReadWrite/MultiTypesAndOddPadding (0.00s)
+    --- PASS: TestServerDemoReadWrite/Multi20Items (0.00s)
+    --- PASS: TestServerDemoReadWrite/DBFillAndDBGet (0.00s)
+    --- PASS: TestServerDemoReadWrite/AddressSyntax (0.00s)
+    --- PASS: TestServerDemoReadWrite/ErrorsPreserveSession (0.00s)
+    --- PASS: TestServerDemoReadWrite/SharedConnection (0.14s)
+    --- PASS: TestServerDemoReadWrite/IndependentConnections (0.03s)
+=== RUN   TestServerDemoOtherAreas
+=== RUN   TestServerDemoOtherAreas/M
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/I
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/Q
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/CT
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/TM
+--- PASS: TestServerDemoOtherAreas (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/M (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/I (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/Q (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/CT (0.00s)
+    --- PASS: TestServerDemoOtherAreas/TM (0.00s)
+=== RUN   TestServerDemoReconnect
+--- PASS: TestServerDemoReconnect (0.01s)
+=== RUN   TestServerDemoManagementWrites
+=== RUN   TestServerDemoManagementWrites/SessionPassword
+=== RUN   TestServerDemoManagementWrites/SetClockAcknowledgement
+=== RUN   TestServerDemoManagementWrites/StopHotColdStart
+--- PASS: TestServerDemoManagementWrites (0.00s)
+    --- PASS: TestServerDemoManagementWrites/SessionPassword (0.00s)
+    --- PASS: TestServerDemoManagementWrites/SetClockAcknowledgement (0.00s)
+    --- PASS: TestServerDemoManagementWrites/StopHotColdStart (0.00s)
+=== RUN   TestServerDemoDiscovery
+    serverdemo_test.go:446: address=127.0.0.1:102 rack=0 slot=2 negotiated PDU=480
+=== RUN   TestServerDemoDiscovery/OrderCode
+    serverdemo_test.go:456: {Code:6ES7 315-2EH14-0AB0 V1:3 V2:2 V3:6}
+=== RUN   TestServerDemoDiscovery/CPUInfo
+    serverdemo_test.go:463: {ModuleTypeName:CPU 315-2 PN/DP SerialNumber:S C-C2UR28922012 ASName:SNAP7-SERVER Copyright:Original Siemens Equipment ModuleName:CPU 315-2 PN/DP}
+=== RUN   TestServerDemoDiscovery/CPInfo
+    serverdemo_test.go:470: {MaxPduLength:2048 MaxConnections:1024 MaxMpiRate:12000000 MaxBusRate:187500}
+=== RUN   TestServerDemoDiscovery/Protection
+    serverdemo_test.go:477: {SchSchal:1 SchPar:0 SchRel:1 BartSch:2 AnlSch:0}
+=== RUN   TestServerDemoDiscovery/CPUStatus
+    serverdemo_test.go:484: status=8
+=== RUN   TestServerDemoDiscovery/Clock
+    serverdemo_test.go:491: 2026-09-30T15:43:03Z
+=== RUN   TestServerDemoDiscovery/Directory
+    serverdemo_test.go:498: {OBList:[] FBList:[] FCList:[] SFBList:[] SFCList:[] DBList:[1 2 3] SDBList:[]}
+=== RUN   TestServerDemoDiscovery/1
+    serverdemo_test.go:518: DB1: {BlkType:10 BlkNumber:1 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:526: read 2048 bytes
+=== RUN   TestServerDemoDiscovery/2
+    serverdemo_test.go:518: DB2: {BlkType:10 BlkNumber:2 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:526: read 2048 bytes
+=== RUN   TestServerDemoDiscovery/3
+    serverdemo_test.go:518: DB3: {BlkType:10 BlkNumber:3 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:526: read 2048 bytes
+--- PASS: TestServerDemoDiscovery (0.01s)
+    --- PASS: TestServerDemoDiscovery/OrderCode (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPUInfo (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPInfo (0.00s)
+    --- PASS: TestServerDemoDiscovery/Protection (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPUStatus (0.00s)
+    --- PASS: TestServerDemoDiscovery/Clock (0.00s)
+    --- PASS: TestServerDemoDiscovery/Directory (0.00s)
+    --- PASS: TestServerDemoDiscovery/1 (0.00s)
+    --- PASS: TestServerDemoDiscovery/2 (0.00s)
+    --- PASS: TestServerDemoDiscovery/3 (0.00s)
+=== RUN   TestServerDemoReadWrite
+    serverdemo_test.go:67: original DB data saved to D:\workspace\iot\edgex\device-s7\doc\review\serverdemo-original-db-20260930-154301.json
+=== RUN   TestServerDemoReadWrite/DBChunking
+=== RUN   TestServerDemoReadWrite/Bits
+=== RUN   TestServerDemoReadWrite/MultiTypesAndOddPadding
+=== RUN   TestServerDemoReadWrite/Multi20Items
+=== RUN   TestServerDemoReadWrite/DBFillAndDBGet
+=== RUN   TestServerDemoReadWrite/AddressSyntax
+    serverdemo_test.go:222: DB1.DBW0=4660
+=== RUN   TestServerDemoReadWrite/ErrorsPreserveSession
+=== RUN   TestServerDemoReadWrite/SharedConnection
+    serverdemo_test.go:292: workers=8 iterations=100 requests=1600 elapsed=134.8232ms requests/s=11867
+=== RUN   TestServerDemoReadWrite/IndependentConnections
+    serverdemo_test.go:292: workers=8 iterations=100 requests=1600 elapsed=21.8278ms requests/s=73301
+=== NAME  TestServerDemoReadWrite
+    serverdemo_test.go:82: original DB1/DB2/DB3 data restored and verified
+--- PASS: TestServerDemoReadWrite (0.19s)
+    --- PASS: TestServerDemoReadWrite/DBChunking (0.01s)
+    --- PASS: TestServerDemoReadWrite/Bits (0.00s)
+    --- PASS: TestServerDemoReadWrite/MultiTypesAndOddPadding (0.00s)
+    --- PASS: TestServerDemoReadWrite/Multi20Items (0.00s)
+    --- PASS: TestServerDemoReadWrite/DBFillAndDBGet (0.00s)
+    --- PASS: TestServerDemoReadWrite/AddressSyntax (0.00s)
+    --- PASS: TestServerDemoReadWrite/ErrorsPreserveSession (0.00s)
+    --- PASS: TestServerDemoReadWrite/SharedConnection (0.13s)
+    --- PASS: TestServerDemoReadWrite/IndependentConnections (0.03s)
+=== RUN   TestServerDemoOtherAreas
+=== RUN   TestServerDemoOtherAreas/M
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/I
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/Q
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/CT
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/TM
+--- PASS: TestServerDemoOtherAreas (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/M (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/I (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/Q (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/CT (0.00s)
+    --- PASS: TestServerDemoOtherAreas/TM (0.00s)
+=== RUN   TestServerDemoReconnect
+--- PASS: TestServerDemoReconnect (0.01s)
+=== RUN   TestServerDemoManagementWrites
+=== RUN   TestServerDemoManagementWrites/SessionPassword
+=== RUN   TestServerDemoManagementWrites/SetClockAcknowledgement
+=== RUN   TestServerDemoManagementWrites/StopHotColdStart
+--- PASS: TestServerDemoManagementWrites (0.00s)
+    --- PASS: TestServerDemoManagementWrites/SessionPassword (0.00s)
+    --- PASS: TestServerDemoManagementWrites/SetClockAcknowledgement (0.00s)
+    --- PASS: TestServerDemoManagementWrites/StopHotColdStart (0.00s)
+=== RUN   TestServerDemoDiscovery
+    serverdemo_test.go:446: address=127.0.0.1:102 rack=0 slot=2 negotiated PDU=480
+=== RUN   TestServerDemoDiscovery/OrderCode
+    serverdemo_test.go:456: {Code:6ES7 315-2EH14-0AB0 V1:3 V2:2 V3:6}
+=== RUN   TestServerDemoDiscovery/CPUInfo
+    serverdemo_test.go:463: {ModuleTypeName:CPU 315-2 PN/DP SerialNumber:S C-C2UR28922012 ASName:SNAP7-SERVER Copyright:Original Siemens Equipment ModuleName:CPU 315-2 PN/DP}
+=== RUN   TestServerDemoDiscovery/CPInfo
+    serverdemo_test.go:470: {MaxPduLength:2048 MaxConnections:1024 MaxMpiRate:12000000 MaxBusRate:187500}
+=== RUN   TestServerDemoDiscovery/Protection
+    serverdemo_test.go:477: {SchSchal:1 SchPar:0 SchRel:1 BartSch:2 AnlSch:0}
+=== RUN   TestServerDemoDiscovery/CPUStatus
+    serverdemo_test.go:484: status=8
+=== RUN   TestServerDemoDiscovery/Clock
+    serverdemo_test.go:491: 2026-09-30T15:43:03Z
+=== RUN   TestServerDemoDiscovery/Directory
+    serverdemo_test.go:498: {OBList:[] FBList:[] FCList:[] SFBList:[] SFCList:[] DBList:[1 2 3] SDBList:[]}
+=== RUN   TestServerDemoDiscovery/1
+    serverdemo_test.go:518: DB1: {BlkType:10 BlkNumber:1 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:526: read 2048 bytes
+=== RUN   TestServerDemoDiscovery/2
+    serverdemo_test.go:518: DB2: {BlkType:10 BlkNumber:2 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:526: read 2048 bytes
+=== RUN   TestServerDemoDiscovery/3
+    serverdemo_test.go:518: DB3: {BlkType:10 BlkNumber:3 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:526: read 2048 bytes
+--- PASS: TestServerDemoDiscovery (0.00s)
+    --- PASS: TestServerDemoDiscovery/OrderCode (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPUInfo (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPInfo (0.00s)
+    --- PASS: TestServerDemoDiscovery/Protection (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPUStatus (0.00s)
+    --- PASS: TestServerDemoDiscovery/Clock (0.00s)
+    --- PASS: TestServerDemoDiscovery/Directory (0.00s)
+    --- PASS: TestServerDemoDiscovery/1 (0.00s)
+    --- PASS: TestServerDemoDiscovery/2 (0.00s)
+    --- PASS: TestServerDemoDiscovery/3 (0.00s)
+=== RUN   TestServerDemoReadWrite
+    serverdemo_test.go:67: original DB data saved to D:\workspace\iot\edgex\device-s7\doc\review\serverdemo-original-db-20260930-154301.json
+=== RUN   TestServerDemoReadWrite/DBChunking
+=== RUN   TestServerDemoReadWrite/Bits
+=== RUN   TestServerDemoReadWrite/MultiTypesAndOddPadding
+=== RUN   TestServerDemoReadWrite/Multi20Items
+=== RUN   TestServerDemoReadWrite/DBFillAndDBGet
+=== RUN   TestServerDemoReadWrite/AddressSyntax
+    serverdemo_test.go:222: DB1.DBW0=4660
+=== RUN   TestServerDemoReadWrite/ErrorsPreserveSession
+=== RUN   TestServerDemoReadWrite/SharedConnection
+    serverdemo_test.go:292: workers=8 iterations=100 requests=1600 elapsed=146.3345ms requests/s=10934
+=== RUN   TestServerDemoReadWrite/IndependentConnections
+    serverdemo_test.go:292: workers=8 iterations=100 requests=1600 elapsed=21.2114ms requests/s=75431
+=== NAME  TestServerDemoReadWrite
+    serverdemo_test.go:82: original DB1/DB2/DB3 data restored and verified
+--- PASS: TestServerDemoReadWrite (0.25s)
+    --- PASS: TestServerDemoReadWrite/DBChunking (0.06s)
+    --- PASS: TestServerDemoReadWrite/Bits (0.01s)
+    --- PASS: TestServerDemoReadWrite/MultiTypesAndOddPadding (0.00s)
+    --- PASS: TestServerDemoReadWrite/Multi20Items (0.00s)
+    --- PASS: TestServerDemoReadWrite/DBFillAndDBGet (0.00s)
+    --- PASS: TestServerDemoReadWrite/AddressSyntax (0.00s)
+    --- PASS: TestServerDemoReadWrite/ErrorsPreserveSession (0.00s)
+    --- PASS: TestServerDemoReadWrite/SharedConnection (0.15s)
+    --- PASS: TestServerDemoReadWrite/IndependentConnections (0.03s)
+=== RUN   TestServerDemoOtherAreas
+=== RUN   TestServerDemoOtherAreas/M
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/I
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/Q
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/CT
+    serverdemo_test.go:315: area unavailable in this ServerDemo configuration: s7: item error 0a: CPU : Item not available
+=== RUN   TestServerDemoOtherAreas/TM
+--- PASS: TestServerDemoOtherAreas (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/M (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/I (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/Q (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/CT (0.00s)
+    --- PASS: TestServerDemoOtherAreas/TM (0.00s)
+=== RUN   TestServerDemoReconnect
+--- PASS: TestServerDemoReconnect (0.01s)
+=== RUN   TestServerDemoManagementWrites
+=== RUN   TestServerDemoManagementWrites/SessionPassword
+=== RUN   TestServerDemoManagementWrites/SetClockAcknowledgement
+=== RUN   TestServerDemoManagementWrites/StopHotColdStart
+--- PASS: TestServerDemoManagementWrites (0.00s)
+    --- PASS: TestServerDemoManagementWrites/SessionPassword (0.00s)
+    --- PASS: TestServerDemoManagementWrites/SetClockAcknowledgement (0.00s)
+    --- PASS: TestServerDemoManagementWrites/StopHotColdStart (0.00s)
+=== RUN   TestServerDemoDiscovery
+    serverdemo_test.go:446: address=127.0.0.1:102 rack=0 slot=2 negotiated PDU=480
+=== RUN   TestServerDemoDiscovery/OrderCode
+    serverdemo_test.go:456: {Code:6ES7 315-2EH14-0AB0 V1:3 V2:2 V3:6}
+=== RUN   TestServerDemoDiscovery/CPUInfo
+    serverdemo_test.go:463: {ModuleTypeName:CPU 315-2 PN/DP SerialNumber:S C-C2UR28922012 ASName:SNAP7-SERVER Copyright:Original Siemens Equipment ModuleName:CPU 315-2 PN/DP}
+=== RUN   TestServerDemoDiscovery/CPInfo
+    serverdemo_test.go:470: {MaxPduLength:2048 MaxConnections:1024 MaxMpiRate:12000000 MaxBusRate:187500}
+=== RUN   TestServerDemoDiscovery/Protection
+    serverdemo_test.go:477: {SchSchal:1 SchPar:0 SchRel:1 BartSch:2 AnlSch:0}
+=== RUN   TestServerDemoDiscovery/CPUStatus
+    serverdemo_test.go:484: status=8
+=== RUN   TestServerDemoDiscovery/Clock
+    serverdemo_test.go:491: 2026-09-30T15:43:04Z
+=== RUN   TestServerDemoDiscovery/Directory
+    serverdemo_test.go:498: {OBList:[] FBList:[] FCList:[] SFBList:[] SFCList:[] DBList:[1 2 3] SDBList:[]}
+=== RUN   TestServerDemoDiscovery/1
+    serverdemo_test.go:518: DB1: {BlkType:10 BlkNumber:1 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:526: read 2048 bytes
+=== RUN   TestServerDemoDiscovery/2
+    serverdemo_test.go:518: DB2: {BlkType:10 BlkNumber:2 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:526: read 2048 bytes
+=== RUN   TestServerDemoDiscovery/3
+    serverdemo_test.go:518: DB3: {BlkType:10 BlkNumber:3 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:526: read 2048 bytes
+--- PASS: TestServerDemoDiscovery (0.01s)
+    --- PASS: TestServerDemoDiscovery/OrderCode (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPUInfo (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPInfo (0.00s)
+    --- PASS: TestServerDemoDiscovery/Protection (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPUStatus (0.00s)
+    --- PASS: TestServerDemoDiscovery/Clock (0.00s)
+    --- PASS: TestServerDemoDiscovery/Directory (0.00s)
+    --- PASS: TestServerDemoDiscovery/1 (0.00s)
+    --- PASS: TestServerDemoDiscovery/2 (0.00s)
+    --- PASS: TestServerDemoDiscovery/3 (0.00s)
+PASS
+ok  	github.com/edgexfoundry/device-s7/doc/review/serverdemo	1.099s

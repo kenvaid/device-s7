@@ -1,0 +1,96 @@
+=== RUN   TestServerDemoReadWrite
+    serverdemo_test.go:67: original DB data saved to D:\workspace\iot\edgex\device-s7\doc\review\serverdemo-original-db.json
+=== RUN   TestServerDemoReadWrite/DBChunking
+=== RUN   TestServerDemoReadWrite/Bits
+=== RUN   TestServerDemoReadWrite/MultiTypesAndOddPadding
+    serverdemo_test.go:142: s7: item error 07: CPU : Data size mismatch
+=== RUN   TestServerDemoReadWrite/Multi20Items
+    serverdemo_test.go:171: s7: missing/invalid item padding
+=== RUN   TestServerDemoReadWrite/DBFillAndDBGet
+    serverdemo_test.go:181: s7: connection to 127.0.0.1:102 is not established
+=== RUN   TestServerDemoReadWrite/AddressSyntax
+    serverdemo_test.go:193: s7: connection is not established
+=== RUN   TestServerDemoReadWrite/ErrorsPreserveSession
+    serverdemo_test.go:210: s7: connection is not established
+=== RUN   TestServerDemoReadWrite/SharedConnection
+    serverdemo_test.go:263: worker 0 write 0: s7: connection is not established
+    serverdemo_test.go:263: worker 7 write 0: s7: connection is not established
+    serverdemo_test.go:263: worker 6 write 0: s7: connection is not established
+    serverdemo_test.go:263: worker 5 write 0: s7: connection is not established
+    serverdemo_test.go:263: worker 3 write 0: s7: connection is not established
+    serverdemo_test.go:263: worker 4 write 0: s7: connection is not established
+    serverdemo_test.go:263: worker 1 write 0: s7: connection is not established
+    serverdemo_test.go:263: worker 2 write 0: s7: connection is not established
+    serverdemo_test.go:266: workers=8 iterations=100 requests=1600 elapsed=0s requests/s=+Inf
+=== RUN   TestServerDemoReadWrite/IndependentConnections
+    serverdemo_test.go:266: workers=8 iterations=100 requests=1600 elapsed=19.3466ms requests/s=82702
+=== NAME  TestServerDemoReadWrite
+    serverdemo_test.go:82: original DB1/DB2/DB3 data restored and verified
+--- FAIL: TestServerDemoReadWrite (0.04s)
+    --- PASS: TestServerDemoReadWrite/DBChunking (0.01s)
+    --- PASS: TestServerDemoReadWrite/Bits (0.00s)
+    --- FAIL: TestServerDemoReadWrite/MultiTypesAndOddPadding (0.00s)
+    --- FAIL: TestServerDemoReadWrite/Multi20Items (0.00s)
+    --- FAIL: TestServerDemoReadWrite/DBFillAndDBGet (0.00s)
+    --- FAIL: TestServerDemoReadWrite/AddressSyntax (0.00s)
+    --- FAIL: TestServerDemoReadWrite/ErrorsPreserveSession (0.00s)
+    --- FAIL: TestServerDemoReadWrite/SharedConnection (0.00s)
+    --- PASS: TestServerDemoReadWrite/IndependentConnections (0.02s)
+=== RUN   TestServerDemoOtherAreas
+=== RUN   TestServerDemoOtherAreas/M
+    serverdemo_test.go:283: area unavailable in this ServerDemo configuration: s7: invalid failed-item payload
+=== RUN   TestServerDemoOtherAreas/I
+    serverdemo_test.go:283: area unavailable in this ServerDemo configuration: s7: connection is not established
+=== RUN   TestServerDemoOtherAreas/Q
+    serverdemo_test.go:283: area unavailable in this ServerDemo configuration: s7: connection is not established
+=== RUN   TestServerDemoOtherAreas/CT
+    serverdemo_test.go:283: area unavailable in this ServerDemo configuration: s7: connection is not established
+=== RUN   TestServerDemoOtherAreas/TM
+    serverdemo_test.go:283: area unavailable in this ServerDemo configuration: s7: connection is not established
+--- PASS: TestServerDemoOtherAreas (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/M (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/I (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/Q (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/CT (0.00s)
+    --- SKIP: TestServerDemoOtherAreas/TM (0.00s)
+=== RUN   TestServerDemoReconnect
+--- PASS: TestServerDemoReconnect (0.01s)
+=== RUN   TestServerDemoDiscovery
+    serverdemo_test.go:330: address=127.0.0.1:102 rack=0 slot=2 negotiated PDU=480
+=== RUN   TestServerDemoDiscovery/OrderCode
+    serverdemo_test.go:340: {Code:6ES7 315-2EH14-0AB0 V1:3 V2:2 V3:6}
+=== RUN   TestServerDemoDiscovery/CPUInfo
+    serverdemo_test.go:347: {ModuleTypeName:CPU 315-2 PN/DP SerialNumber:S C-C2UR28922012 ASName:SNAP7-SERVER Copyright:Original Siemens Equipment ModuleName:CPU 315-2 PN/DP}
+=== RUN   TestServerDemoDiscovery/CPInfo
+    serverdemo_test.go:354: {MaxPduLength:2048 MaxConnections:1024 MaxMpiRate:12000000 MaxBusRate:187500}
+=== RUN   TestServerDemoDiscovery/Protection
+    serverdemo_test.go:361: {SchSchal:1 SchPar:0 SchRel:1 BartSch:2 AnlSch:0}
+=== RUN   TestServerDemoDiscovery/CPUStatus
+    serverdemo_test.go:368: status=8
+=== RUN   TestServerDemoDiscovery/Clock
+    serverdemo_test.go:373: s7: invalid clock payload
+=== RUN   TestServerDemoDiscovery/Directory
+    serverdemo_test.go:380: S7: exception (no block available)'
+=== RUN   TestServerDemoDiscovery/1
+    serverdemo_test.go:402: DB1: {BlkType:10 BlkNumber:1 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:410: read 2048 bytes
+=== RUN   TestServerDemoDiscovery/2
+    serverdemo_test.go:402: DB2: {BlkType:10 BlkNumber:2 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:410: read 2048 bytes
+=== RUN   TestServerDemoDiscovery/3
+    serverdemo_test.go:402: DB3: {BlkType:10 BlkNumber:3 BlkLang:5 BlkFlags:1 MC7Size:2048 LoadSize:2140 LocalData:0 SBBLength:20 CheckSum:0 Version:1 CodeDate:18.11.1999 IntfDate:18.11.1999 Author: Family: Header:}
+    serverdemo_test.go:410: read 2048 bytes
+--- FAIL: TestServerDemoDiscovery (0.00s)
+    --- PASS: TestServerDemoDiscovery/OrderCode (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPUInfo (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPInfo (0.00s)
+    --- PASS: TestServerDemoDiscovery/Protection (0.00s)
+    --- PASS: TestServerDemoDiscovery/CPUStatus (0.00s)
+    --- FAIL: TestServerDemoDiscovery/Clock (0.00s)
+    --- FAIL: TestServerDemoDiscovery/Directory (0.00s)
+    --- PASS: TestServerDemoDiscovery/1 (0.00s)
+    --- PASS: TestServerDemoDiscovery/2 (0.00s)
+    --- PASS: TestServerDemoDiscovery/3 (0.00s)
+FAIL
+FAIL	github.com/edgexfoundry/device-s7/doc/review/serverdemo	0.426s
+FAIL

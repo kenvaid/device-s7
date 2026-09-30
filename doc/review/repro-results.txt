@@ -1,0 +1,219 @@
+=== RUN   TestReviewContracts
+
+=== RUN   TestReviewContracts/read_transport_failure
+
+--- PASS: TestReviewContracts/read_transport_failure (0.10s)
+
+=== RUN   TestReviewContracts/write_transport_failure
+
+    review_repro_test.go:59: transport EOF must fail: got err=<nil> calls=3
+
+--- FAIL: TestReviewContracts/write_transport_failure (0.00s)
+
+=== RUN   TestReviewContracts/write_item_failure
+
+    review_repro_test.go:66: per-item PLC denial must fail: got nil
+
+--- FAIL: TestReviewContracts/write_item_failure (0.00s)
+
+=== RUN   TestReviewContracts/invalid_read_address
+
+    review_repro_test.go:74: invalid address must fail: got value=0 network calls=0
+
+--- FAIL: TestReviewContracts/invalid_read_address (0.00s)
+
+=== RUN   TestReviewContracts/read_item_failure_partial_success
+
+    review_repro_test.go:85: partial read silently succeeds: err=<nil> returned=1 requested=2 value=9
+
+--- FAIL: TestReviewContracts/read_item_failure_partial_success (0.00s)
+
+=== RUN   TestReviewContracts/uint64_decode
+
+binary.Read failed: unexpected EOF
+
+    review_repro_test.go:91: short uint64 buffer must fail: got value=0 err=<nil>
+
+--- FAIL: TestReviewContracts/uint64_decode (0.00s)
+
+=== RUN   TestReviewContracts/uint64_write
+
+    review_repro_test.go:99: uint64 must preserve 8 bytes: sent=01020304 err=<nil>
+
+--- FAIL: TestReviewContracts/uint64_write (0.00s)
+
+=== RUN   TestReviewContracts/string_decode
+
+binary.Read failed: binary.Read: invalid type *string
+
+    review_repro_test.go:105: nonempty string silently becomes empty with nil error
+
+--- FAIL: TestReviewContracts/string_decode (0.00s)
+
+=== RUN   TestReviewContracts/string_write
+
+binary.Write failed: binary.Write: some values are not fixed-sized in type string
+
+    review_repro_test.go:113: string write silently sends zeros: 00000000
+
+--- FAIL: TestReviewContracts/string_write (0.00s)
+
+=== RUN   TestReviewContracts/write_value_type_mismatch
+
+    review_repro_test.go:118: sent 00000000
+
+    review_repro_test.go:121: type mismatch must fail before I/O: err=<nil> calls=1
+
+--- FAIL: TestReviewContracts/write_value_type_mismatch (0.00s)
+
+=== RUN   TestReviewContracts/malformed_D
+
+    review_repro_test.go:128: malformed address panics: runtime error: slice bounds out of range [:2] with length 1
+
+--- FAIL: TestReviewContracts/malformed_D (0.00s)
+
+=== RUN   TestReviewContracts/malformed_DB1.
+
+    review_repro_test.go:128: malformed address panics: runtime error: slice bounds out of range [3:0]
+
+--- FAIL: TestReviewContracts/malformed_DB1. (0.00s)
+
+=== RUN   TestReviewContracts/malformed_DB1.X
+
+    review_repro_test.go:128: malformed address panics: runtime error: slice bounds out of range [3:1]
+
+--- FAIL: TestReviewContracts/malformed_DB1.X (0.00s)
+
+=== RUN   TestReviewContracts/missing_protocol_fields
+
+    review_repro_test.go:141: empty s7 protocol properties accepted
+
+--- FAIL: TestReviewContracts/missing_protocol_fields (0.00s)
+
+=== RUN   TestReviewContracts/db_bit_out_of_range
+
+    review_repro_test.go:148: bit 8 accepted and points to next byte: &{Area:132 DBNumber:1 Start:8 Bit:0 Amount:1 WordLength:1 DBArray:[DB1 DBX0 8]}
+
+--- FAIL: TestReviewContracts/db_bit_out_of_range (0.00s)
+
+=== RUN   TestReviewContracts/area_EB10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:0 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:0 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_EB10 (0.00s)
+
+=== RUN   TestReviewContracts/area_EW10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:0 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:0 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_EW10 (0.00s)
+
+=== RUN   TestReviewContracts/area_ED10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:0 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:0 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_ED10 (0.00s)
+
+=== RUN   TestReviewContracts/area_AB10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:0 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:0 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_AB10 (0.00s)
+
+=== RUN   TestReviewContracts/area_AW10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:0 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:0 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_AW10 (0.00s)
+
+=== RUN   TestReviewContracts/area_AD10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:0 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:0 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_AD10 (0.00s)
+
+=== RUN   TestReviewContracts/area_MB10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:0 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:0 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_MB10 (0.00s)
+
+=== RUN   TestReviewContracts/area_MW10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:0 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:0 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_MW10 (0.00s)
+
+=== RUN   TestReviewContracts/area_MD10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:0 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:0 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_MD10 (0.00s)
+
+=== RUN   TestReviewContracts/area_T10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:29 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:29 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_T10 (0.00s)
+
+=== RUN   TestReviewContracts/area_C10
+
+    review_repro_test.go:155: accepted unusable descriptor: &{Area:28 DBNumber:0 Start:0 Bit:0 Amount:0 WordLength:28 DBArray:[]}
+
+--- FAIL: TestReviewContracts/area_C10 (0.00s)
+
+=== RUN   TestReviewContracts/pdu240_write16
+
+    review_repro_test.go:171: 16-item packet exceeds negotiated PDU=240, but driver reports success
+
+--- FAIL: TestReviewContracts/pdu240_write16 (0.00s)
+
+=== RUN   TestReviewContracts/old_request_evicts_replacement
+
+    review_repro_test.go:199: failed old request deleted the replacement connection
+
+--- FAIL: TestReviewContracts/old_request_evicts_replacement (0.10s)
+
+=== RUN   TestReviewContracts/different_devices_parallel
+
+--- PASS: TestReviewContracts/different_devices_parallel (0.00s)
+
+=== RUN   TestReviewContracts/same_device_serial
+
+--- PASS: TestReviewContracts/same_device_serial (0.05s)
+
+=== RUN   TestReviewContracts/cold_connection_burst
+
+    review_repro_test.go:323: one device cold burst creates 8 TCP connections before retaining one
+
+--- FAIL: TestReviewContracts/cold_connection_burst (0.00s)
+
+=== RUN   TestReviewContracts/wire_bit_DB1.DBX100.0
+
+[3 0 0 37 2 240 128 50 1 0 0 5 0 0 14 0 6 5 1 18 10 16 1 0 1 0 1 132 0 3 32 0 3 0 1 1 0]    review_repro_test.go:327: wire bit address should be 800: read=6400 write=800
+
+--- FAIL: TestReviewContracts/wire_bit_DB1.DBX100.0 (0.00s)
+
+=== RUN   TestReviewContracts/wire_bit_DB1.DBX1.3
+
+[3 0 0 37 2 240 128 50 1 0 0 5 0 0 14 0 6 5 1 18 10 16 1 0 1 0 1 132 0 0 11 0 3 0 1 1 0]    review_repro_test.go:327: wire bit address should be 11: read=88 write=11
+
+--- FAIL: TestReviewContracts/wire_bit_DB1.DBX1.3 (0.00s)
+
+=== RUN   TestReviewContracts/wire_bit_Q12.5
+
+[3 0 0 37 2 240 128 50 1 0 0 5 0 0 14 0 6 5 1 18 10 16 1 0 1 0 0 130 0 0 12 0 3 0 1 1 0]    review_repro_test.go:327: wire bit address should be 101: read=101 write=12
+
+--- FAIL: TestReviewContracts/wire_bit_Q12.5 (0.00s)
+
+=== RUN   TestReviewContracts/wire_bit_M29.1
+
+[3 0 0 37 2 240 128 50 1 0 0 5 0 0 14 0 6 5 1 18 10 16 1 0 1 0 0 131 0 0 29 0 3 0 1 1 0]    review_repro_test.go:327: wire bit address should be 233: read=233 write=29
+
+--- FAIL: TestReviewContracts/wire_bit_M29.1 (0.00s)
+
+--- FAIL: TestReviewContracts (0.26s)
+
+FAIL
+
+FAIL	github.com/edgexfoundry/device-s7/internal/driver	0.752s

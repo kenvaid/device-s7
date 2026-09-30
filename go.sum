@@ -277,8 +277,8 @@ github.com/jstemmer/go-junit-report v0.9.1/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/X
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/kataras/go-events v0.0.3 h1:o5YK53uURXtrlg7qE/vovxd/yKOJcLuFtPQbf1rYMC4=
 github.com/kataras/go-events v0.0.3/go.mod h1:bFBgtzwwzrag7kQmGuU1ZaVxhK2qseYPQomXoVEMsj4=
-github.com/kenvaid/gos7 v0.0.0-20260116060817-cd3f477de877 h1:OA3xUTqY3m/Fpi/YzfW54XAt6rhR1wEu5zUk/3I5p7c=
-github.com/kenvaid/gos7 v0.0.0-20260116060817-cd3f477de877/go.mod h1:d1JAGYCWWZM3KAIvC0zSloZAHG8doqurnDZBJKy69ec=
+github.com/kenvaid/gos7 v0.0.0-20260930084703-0a8e4f3e873c h1:IZ5o1nYXe0JvBMxpZebnPgqrfzVxNvHvpmB1JDX40kw=
+github.com/kenvaid/gos7 v0.0.0-20260930084703-0a8e4f3e873c/go.mod h1:d1JAGYCWWZM3KAIvC0zSloZAHG8doqurnDZBJKy69ec=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/klauspost/compress v1.18.0 h1:c/Cqfb0r+Yi+JtIEq73FWXVkRonBlf0CRNYc8Zttxdo=

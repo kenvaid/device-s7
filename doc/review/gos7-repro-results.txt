@@ -1,0 +1,152 @@
+=== RUN   TestReviewGos7Contracts
+=== RUN   TestReviewGos7Contracts/bit_read_write_same_address
+    zz_review_test.go:125: same Start=10 Bit=3: read address=000053 write address=00000a; expected 000053
+=== RUN   TestReviewGos7Contracts/timeout_discards_connection_and_stale_reply
+2026/09/29 15:18:35 *net.OpError read pipe: i/o timeout
+    zz_review_test.go:154: timed-out connection retained
+    zz_review_test.go:159: second address read accepted stale first response: 11
+=== RUN   TestReviewGos7Contracts/global_read_error_propagated
+    zz_review_test.go:167: S7 Ack_Data error 8104 ignored
+=== RUN   TestReviewGos7Contracts/global_write_error_propagated
+    zz_review_test.go:175: S7 Ack_Data error 8104 ignored
+=== RUN   TestReviewGos7Contracts/wrong_reference
+    zz_review_test.go:195: mismatched response accepted
+=== RUN   TestReviewGos7Contracts/wrong_function
+    zz_review_test.go:195: mismatched response accepted
+=== RUN   TestReviewGos7Contracts/wrong_protocol
+    zz_review_test.go:195: mismatched response accepted
+=== RUN   TestReviewGos7Contracts/wrong_tpkt_version
+    zz_review_test.go:195: mismatched response accepted
+=== RUN   TestReviewGos7Contracts/wrong_cotp_type
+    zz_review_test.go:195: mismatched response accepted
+=== RUN   TestReviewGos7Contracts/single_read_rejects_short_payload
+    zz_review_test.go:204: requested 4 bytes, received 1, returned success with 42000000
+=== RUN   TestReviewGos7Contracts/multi_read_rejects_short_payload
+    zz_review_test.go:214: advertised 4 bytes, received 1, returned success with 42000000
+=== RUN   TestReviewGos7Contracts/multi_write_rejects_short_response
+    panic.go:236: must return an error, panicked: runtime error: slice bounds out of range [17:16]
+=== RUN   TestReviewGos7Contracts/count_exceeds_slice_read
+    panic.go:236: must return an error, panicked: runtime error: index out of range [0] with length 0
+=== RUN   TestReviewGos7Contracts/count_exceeds_slice_write
+    panic.go:236: must return an error, panicked: runtime error: index out of range [0] with length 0
+=== RUN   TestReviewGos7Contracts/write_multi_validates_size_before_scratch_copy
+    panic.go:236: must return an error, panicked: runtime error: slice bounds out of range [:1025] with capacity 1024
+=== RUN   TestReviewGos7Contracts/write_multi_rejects_short_input
+    zz_review_test.go:249: short input silently padded and written: 42000000
+=== RUN   TestReviewGos7Contracts/read_area_rejects_short_output
+    panic.go:236: must return an error, panicked: runtime error: slice bounds out of range [:4] with capacity 1
+=== RUN   TestReviewGos7Contracts/write_area_rejects_short_input
+    panic.go:236: must return an error, panicked: runtime error: slice bounds out of range [:4] with capacity 1
+=== RUN   TestReviewGos7Contracts/negative_amount_rejected
+    zz_review_test.go:270: negative read amount returned success without I/O
+=== RUN   TestReviewGos7Contracts/counter_transport_multi
+    zz_review_test.go:287: counter transport-size=0, want octet=9; request tail=00000000
+=== RUN   TestReviewGos7Contracts/counter_transport_area
+    zz_review_test.go:287: counter transport-size=4, want octet=9; request tail=000400021200
+=== RUN   TestReviewGos7Contracts/full_16_bit_timer
+    zz_review_test.go:308: 16-bit result lost data: got 12ee, wire 1234
+=== RUN   TestReviewGos7Contracts/full_16_bit_counter
+    zz_review_test.go:308: 16-bit result lost data: got 12ee, wire 1234
+=== RUN   TestReviewGos7Contracts/invalid_syntax_D
+    panic.go:236: must return an error, panicked: runtime error: slice bounds out of range [:2] with length 1
+=== RUN   TestReviewGos7Contracts/invalid_syntax_DB1.X
+    panic.go:236: must return an error, panicked: runtime error: slice bounds out of range [3:1]
+=== RUN   TestReviewGos7Contracts/invalid_syntax_DB1.DBX0
+    panic.go:236: must return an error, panicked: runtime error: index out of range [2] with length 2
+=== RUN   TestReviewGos7Contracts/non_db_read_syntax_implemented
+    zz_review_test.go:326: MB0: I/O=false value=<nil> error=<nil>
+=== RUN   TestReviewGos7Contracts/clock_get_transport_error
+    panic.go:336: must return an error, panicked: runtime error: invalid memory address or nil pointer dereference
+=== RUN   TestReviewGos7Contracts/clock_set_fits_template
+    panic.go:236: must return an error, panicked: runtime error: index out of range [39] with length 39
+=== RUN   TestReviewGos7Contracts/status_short_response
+    panic.go:236: must return an error, panicked: runtime error: index out of range [44] with length 33
+=== RUN   TestReviewGos7Contracts/block_info_short_response
+    panic.go:236: must return an error, panicked: runtime error: index out of range [42] with length 33
+=== RUN   TestReviewGos7Contracts/clock_short_response
+    panic.go:236: must return an error, panicked: runtime error: index out of range [35] with length 33
+=== RUN   TestReviewGos7Contracts/szl_fragment_preservation_header_and_size
+    zz_review_test.go:379: earlier fragment erased: 00000304
+    zz_review_test.go:382: record width doubled: 8
+    zz_review_test.go:385: returned size=0, expected 4
+=== RUN   TestReviewGos7Contracts/szl_bad_return_code_rejected
+    zz_review_test.go:393: failed item return code accepted because global status is zero
+=== RUN   TestReviewGos7Contracts/order_code_id_and_return
+    zz_review_test.go:400: order-code SZL=0131, want 0011
+    panic.go:236: must return an error, panicked: runtime error: index out of range [-3]
+=== RUN   TestReviewGos7Contracts/directory_preserves_first_error
+[]    zz_review_test.go:419: first error overwritten: <nil>
+=== RUN   TestReviewGos7Contracts/wstring_character_count
+    zz_review_test.go:427: header length=6, expected 2 characters
+    zz_review_test.go:430: roundtrip="中文\x00\x00\x00\x00"
+=== RUN   TestReviewGos7Contracts/chars_write_updates_caller
+    zz_review_test.go:438: caller buffer="abcd", want abXY
+=== RUN   TestReviewGos7Contracts/counter_roundtrip
+    zz_review_test.go:445: 123 -> encoded 00c9 -> 12900
+=== RUN   TestReviewGos7Contracts/tod_offset_and_milliseconds
+    zz_review_test.go:454: offset roundtrip=1970-01-01 00:00:00 +0000 UTC, want 1970-01-01 01:02:03.456 +0000 UTC
+=== RUN   TestReviewGos7Contracts/tod_millisecond_precision
+    zz_review_test.go:463: TOD lost milliseconds: 1970-01-01 01:02:03 +0000 UTC
+=== RUN   TestReviewGos7Contracts/dtl_weekday_numbering
+    zz_review_test.go:471: Sunday encoded 0, Siemens expects 1
+=== RUN   TestReviewGos7Contracts/date_time_weekday_numbering
+    zz_review_test.go:479: Sunday encoded 0, Siemens expects 1
+=== RUN   TestReviewGos7Contracts/date_unsigned_range
+    zz_review_test.go:487: DATE 8000 decoded 1900-04-15 00:00:00 +0000 UTC, want 2079-09-19 00:00:00 +0000 UTC
+=== RUN   TestReviewGos7Contracts/negotiation_rejects_impossible_pdu
+    zz_review_test.go:495: negotiated PDU=1 accepted despite being smaller than S7 header
+=== RUN   TestReviewGos7Contracts/small_pdu_does_not_send_zero_element_loop
+    zz_review_test.go:523: non-progressing read generated 3 zero-element requests before test peer closed
+=== RUN   TestReviewGos7Contracts/custom_transporter_supported
+    panic.go:336: must return an error, panicked: runtime error: invalid memory address or nil pointer dereference
+--- FAIL: TestReviewGos7Contracts (0.05s)
+    --- FAIL: TestReviewGos7Contracts/bit_read_write_same_address (0.00s)
+    --- FAIL: TestReviewGos7Contracts/timeout_discards_connection_and_stale_reply (0.04s)
+    --- FAIL: TestReviewGos7Contracts/global_read_error_propagated (0.00s)
+    --- FAIL: TestReviewGos7Contracts/global_write_error_propagated (0.00s)
+    --- FAIL: TestReviewGos7Contracts/wrong_reference (0.00s)
+    --- FAIL: TestReviewGos7Contracts/wrong_function (0.00s)
+    --- FAIL: TestReviewGos7Contracts/wrong_protocol (0.00s)
+    --- FAIL: TestReviewGos7Contracts/wrong_tpkt_version (0.00s)
+    --- FAIL: TestReviewGos7Contracts/wrong_cotp_type (0.00s)
+    --- FAIL: TestReviewGos7Contracts/single_read_rejects_short_payload (0.00s)
+    --- FAIL: TestReviewGos7Contracts/multi_read_rejects_short_payload (0.00s)
+    --- FAIL: TestReviewGos7Contracts/multi_write_rejects_short_response (0.00s)
+    --- FAIL: TestReviewGos7Contracts/count_exceeds_slice_read (0.00s)
+    --- FAIL: TestReviewGos7Contracts/count_exceeds_slice_write (0.00s)
+    --- FAIL: TestReviewGos7Contracts/write_multi_validates_size_before_scratch_copy (0.00s)
+    --- FAIL: TestReviewGos7Contracts/write_multi_rejects_short_input (0.00s)
+    --- FAIL: TestReviewGos7Contracts/read_area_rejects_short_output (0.00s)
+    --- FAIL: TestReviewGos7Contracts/write_area_rejects_short_input (0.00s)
+    --- FAIL: TestReviewGos7Contracts/negative_amount_rejected (0.00s)
+    --- FAIL: TestReviewGos7Contracts/counter_transport_multi (0.00s)
+    --- FAIL: TestReviewGos7Contracts/counter_transport_area (0.00s)
+    --- FAIL: TestReviewGos7Contracts/full_16_bit_timer (0.00s)
+    --- FAIL: TestReviewGos7Contracts/full_16_bit_counter (0.00s)
+    --- FAIL: TestReviewGos7Contracts/invalid_syntax_D (0.00s)
+    --- FAIL: TestReviewGos7Contracts/invalid_syntax_DB1.X (0.00s)
+    --- FAIL: TestReviewGos7Contracts/invalid_syntax_DB1.DBX0 (0.00s)
+    --- FAIL: TestReviewGos7Contracts/non_db_read_syntax_implemented (0.00s)
+    --- FAIL: TestReviewGos7Contracts/clock_get_transport_error (0.00s)
+    --- FAIL: TestReviewGos7Contracts/clock_set_fits_template (0.00s)
+    --- FAIL: TestReviewGos7Contracts/status_short_response (0.00s)
+    --- FAIL: TestReviewGos7Contracts/block_info_short_response (0.00s)
+    --- FAIL: TestReviewGos7Contracts/clock_short_response (0.00s)
+    --- FAIL: TestReviewGos7Contracts/szl_fragment_preservation_header_and_size (0.00s)
+    --- FAIL: TestReviewGos7Contracts/szl_bad_return_code_rejected (0.00s)
+    --- FAIL: TestReviewGos7Contracts/order_code_id_and_return (0.00s)
+    --- FAIL: TestReviewGos7Contracts/directory_preserves_first_error (0.00s)
+    --- FAIL: TestReviewGos7Contracts/wstring_character_count (0.00s)
+    --- FAIL: TestReviewGos7Contracts/chars_write_updates_caller (0.00s)
+    --- FAIL: TestReviewGos7Contracts/counter_roundtrip (0.00s)
+    --- FAIL: TestReviewGos7Contracts/tod_offset_and_milliseconds (0.00s)
+    --- FAIL: TestReviewGos7Contracts/tod_millisecond_precision (0.00s)
+    --- FAIL: TestReviewGos7Contracts/dtl_weekday_numbering (0.00s)
+    --- FAIL: TestReviewGos7Contracts/date_time_weekday_numbering (0.00s)
+    --- FAIL: TestReviewGos7Contracts/date_unsigned_range (0.00s)
+    --- FAIL: TestReviewGos7Contracts/negotiation_rejects_impossible_pdu (0.00s)
+    --- FAIL: TestReviewGos7Contracts/small_pdu_does_not_send_zero_element_loop (0.00s)
+    --- FAIL: TestReviewGos7Contracts/custom_transporter_supported (0.00s)
+FAIL
+FAIL	github.com/kenvaid/gos7	0.368s
+FAIL

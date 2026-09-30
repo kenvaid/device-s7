@@ -1,0 +1,9 @@
+test_bit_preserves_other_seven_bits (__main__.WireVectors.test_bit_preserves_other_seven_bits) ... ok
+test_char_real_then_byte_write (__main__.WireVectors.test_char_real_then_byte_write) ... ok
+test_counter_octet_length_and_element_offset (__main__.WireVectors.test_counter_octet_length_and_element_offset) ... ok
+test_out_of_range_does_not_truncate_write (__main__.WireVectors.test_out_of_range_does_not_truncate_write) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK

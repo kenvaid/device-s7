@@ -595,171 +595,131 @@ func (s *Driver) getS7Client(deviceName string, protocols map[string]models.Prot
 }
 
 // transfer DBstring to DBInfo
-func (s *Driver) getDBInfo(variable string) (dbInfo *DBInfo, err error) {
-
-	// varibale sample: DB2.DBX1.0 / DB2.DBD26 / DB2.DBD826
-	variable = strings.ToUpper(variable)              //upper
-	variable = strings.Replace(variable, " ", "", -1) //remove spaces
-
-	if variable == "" {
-		s.lc.Errorf("input [NodeName] variable is empty, variable should be S7 syntax")
-		return nil, fmt.Errorf("input [NodeName] variable is empty, variable should be S7 syntax")
+func (s *Driver) getDBInfo(variable string) (*DBInfo, error) {
+	variable = strings.ToUpper(strings.ReplaceAll(variable, " ", ""))
+	invalid := func() (*DBInfo, error) { return nil, fmt.Errorf("invalid S7 address %q", variable) }
+	number := func(text string) (int, error) {
+		if text == "" {
+			return 0, fmt.Errorf("empty address number")
+		}
+		for _, c := range text {
+			if c < '0' || c > '9' {
+				return 0, fmt.Errorf("invalid address number")
+			}
+		}
+		n, e := strconv.ParseUint(text, 10, 32)
+		return int(n), e
 	}
-
-	var area int
-	var amount int
-	var wordLen int
-	var dbNo int64
-	var dbIndex int64
-	var dbBit int64
-	var dbArray []string
-
-	//var area, dbNumber, start, amount, wordLen int
-	switch valueArea := variable[0:2]; valueArea {
-	case "EB": //input byte
-	case "EW": //input word
-	case "ED": //Input double-word
-	case "AB": //Output byte
-	case "AW": //Output word
-	case "AD": //Output double-word
-	case "MB": //Memory byte
-	case "MW": //Memory word
-	case "MD": //Memory double-word
-	case "DB": //Data Block
-		// Area ID
-		// s7areape = 0x81 //process inputs
-		// s7areapa = 0x82 //process outputs
-		// s7areamk = 0x83 //Merkers
-		// s7areadb = 0x84 //DB
-		// s7areact = 0x1C //counters
-		// s7areatm = 0x1D //timers
-		area = 0x84
-		amount = 1
-		dbArray = strings.Split(variable, ".")
-		if len(dbArray) < 2 {
-			s.lc.Errorf("Db Area read variable should not be empty")
-			return nil, fmt.Errorf("DB variable %+v is invalid", variable)
+	if len(variable) < 2 {
+		return invalid()
+	}
+	info := &DBInfo{Amount: 1}
+	width := 1
+	if strings.HasPrefix(variable, "DB") {
+		parts := strings.Split(variable, ".")
+		if len(parts) < 2 || len(parts) > 3 || len(parts[0]) < 3 || len(parts[1]) < 4 {
+			return invalid()
 		}
-		dbNo, err = strconv.ParseInt(string(string(dbArray[0])[2:]), 10, 16)
-		if err != nil {
-			s.lc.Errorf("convert dbNo of %+v to int failed.err:%v", variable, err)
-			return nil, fmt.Errorf("convert dbNo of %+v to int failed.err:%v", variable, err)
+		db, e := number(parts[0][2:])
+		if e != nil || db > 65535 {
+			return invalid()
 		}
-		dbIndex, err = strconv.ParseInt(string(string(dbArray[1])[3:]), 10, 16)
-		if err != nil {
-			s.lc.Errorf("convert dbIndex of %+v to int failed.err:%v", variable, err)
-			return nil, fmt.Errorf("convert dbIndex of %+v to int failed.err:%v", variable, err)
+		start, e := number(parts[1][3:])
+		if e != nil {
+			return invalid()
 		}
-
-		dbType := string(dbArray[1])[0:3]
-
-		switch dbType {
-		case "DBX": //bit
-			wordLen = s7wlbit
-			if length := len(dbArray); length != 3 {
-				s.lc.Errorf("The point address of %+v is incorrect", variable)
-				return nil, fmt.Errorf("the point address of %+v is incorrect", variable)
-			}
-			// DBIndex = dbIndex + dbBit (DBX12.5 = 12<<3 + 5 = 96+5 = 101 = 0x65)
-			dbBit, err := strconv.ParseInt(string(string(dbArray[2])), 10, 16)
-			if err != nil {
-				s.lc.Errorf("convert dbBit of %+v to int failed.err:%v", variable, err)
-				return nil, fmt.Errorf("convert dbBit of %+v to int failed.err:%v", variable, err)
-			}
-			dbIndex = dbIndex<<3 + dbBit
-		case "DBB": //byte
-			wordLen = s7wlbyte
-		case "DBW": //word
-			wordLen = s7wlword
-			// amount = 2
-		case "DBD": //dword
-			wordLen = s7wlreal
-			// amount = 4
+		info.Area, info.DBNumber, info.Start, info.DBArray = 0x84, db, start, parts
+		switch parts[1][:3] {
+		case "DBX":
+			info.WordLength = s7wlbit
+		case "DBB":
+			info.WordLength = s7wlbyte
+		case "DBW":
+			info.WordLength = s7wlword
+			width = 2
+		case "DBD":
+			info.WordLength = s7wlreal
+			width = 4
 		default:
-			s.lc.Errorf("error when parsing dbtype")
-			return nil, fmt.Errorf("error when parsing dbtype")
+			return invalid()
 		}
-	default:
-		s.lc.Debugf("variable: %+v", variable)
-		dbNo = 0
-		otherArea := variable[0:1]
-		switch otherArea {
-		case "I": //input
-			area = 0x81
-		case "Q": //output
-			area = 0x82
-		case "M": //memory
-			area = 0x83
-		case "V": //data block DB1
-			dbNo = 1
-			area = 0x84
-		case "T": //timer
-			area = 0x1D
-			wordLen = s7wltimer
-		case "C": //counter
-			area = 0x1C
-			wordLen = s7wlcounter
-		default:
-			s.lc.Errorf("error when parsing db area")
-			return nil, fmt.Errorf("error when parsing db area")
-		}
-
-		if otherArea == "I" || otherArea == "Q" || otherArea == "M" || otherArea == "V" {
-			dbArray = strings.Split(variable, ".")
-			if len(dbArray) > 2 {
-				s.lc.Errorf("The point address of %+v is incorrect", variable)
-				return nil, fmt.Errorf("the point address of %+v is incorrect", variable)
-			} else if len(dbArray) == 2 {
-				wordLen = s7wlbit
-				amount = 1
-				// DBIndex = dbIndex + dbBit (I12.5 = 12<<3 + 5 = 96+5 = 101 = 0x65)
-				dbBit, err = strconv.ParseInt(string(string(dbArray[1])), 10, 16)
-				if err != nil {
-					s.lc.Errorf("convert dbBit of %+v to int failed.err:%v", variable, err)
-					return nil, fmt.Errorf("convert dbBit of %+v to int failed.err:%v", variable, err)
-				}
-				dbIndex, err = strconv.ParseInt(string(string(dbArray[0])[1:]), 10, 16)
-				if err != nil {
-					s.lc.Errorf("convert dbIndex of %+v to int failed.err:%v", variable, err)
-					return nil, fmt.Errorf("convert dbIndex of %+v to int failed.err:%v", variable, err)
-				}
-			} else {
-				wordLen = s7wlbyte
-				dbType := variable[1:2]
-				switch dbType {
-				case "B": //byte
-					amount = 1
-				case "W": //word
-					amount = 2
-				case "D": //dword
-					amount = 4
-				case "L": //ulong
-					amount = 8
-				case "F": //float
-					amount = 4
-				default:
-					s.lc.Errorf("error when parsing dbtype: %+v", dbType)
-					return nil, fmt.Errorf("error when parsing dbtype: %+v", dbType)
-				}
-				dbIndex, err = strconv.ParseInt(variable[2:], 10, 16)
-				if err != nil {
-					s.lc.Errorf("convert dbIndex of %+v to int failed.err:%v", variable, err)
-					return nil, fmt.Errorf("convert dbIndex of %+v to int failed.err:%v", variable, err)
-				}
+		if info.WordLength == s7wlbit {
+			if len(parts) != 3 {
+				return invalid()
 			}
+			bit, e := number(parts[2])
+			if e != nil || bit > 7 {
+				return invalid()
+			}
+			info.Bit = bit
+		} else if len(parts) != 2 {
+			return invalid()
+		}
+	} else {
+		switch variable[0] {
+		case 'I', 'E':
+			info.Area = 0x81
+		case 'Q', 'O', 'A':
+			info.Area = 0x82
+		case 'M':
+			info.Area = 0x83
+		case 'V':
+			info.Area, info.DBNumber = 0x84, 1
+		case 'T':
+			info.Area, info.WordLength = 0x1d, s7wltimer
+		case 'C', 'Z':
+			info.Area, info.WordLength = 0x1c, s7wlcounter
+		default:
+			return invalid()
+		}
+		if info.Area == 0x1c || info.Area == 0x1d {
+			start, e := number(variable[1:])
+			if e != nil || start > 65535 {
+				return invalid()
+			}
+			info.Start = start
+			return info, nil
+		}
+		parts := strings.Split(variable, ".")
+		info.DBArray = parts
+		if len(parts) == 2 {
+			start, e := number(parts[0][1:])
+			if e != nil {
+				return invalid()
+			}
+			bit, e := number(parts[1])
+			if e != nil || bit > 7 {
+				return invalid()
+			}
+			info.Start, info.Bit, info.WordLength = start, bit, s7wlbit
+		} else if len(parts) == 1 {
+			switch variable[1] {
+			case 'B':
+				width = 1
+			case 'W':
+				width = 2
+			case 'D', 'F':
+				width = 4
+			case 'L':
+				width = 8
+			default:
+				return invalid()
+			}
+			start, e := number(variable[2:])
+			if e != nil {
+				return invalid()
+			}
+			info.Start, info.WordLength, info.Amount = start, s7wlbyte, width
+		} else {
+			return invalid()
 		}
 	}
-
-	return &DBInfo{
-		Area:       area,
-		DBNumber:   int(dbNo),
-		Start:      int(dbIndex),
-		Bit:        int(dbBit),
-		Amount:     amount,
-		WordLength: wordLen,
-		DBArray:    dbArray,
-	}, nil
-
+	// Start stays in bytes for both bit reads and writes. gos7 performs the
+	// single conversion to the 24-bit S7ANY bit address, using the separate Bit.
+	if info.Start > 0x200000-width {
+		return invalid()
+	}
+	return info, nil
 }
 
 // Get command value type

@@ -1,0 +1,9 @@
+Validating D:\workspace\iot\edgex\gos7
+ok  	github.com/kenvaid/gos7	0.996s	coverage: 74.9% of statements
+	github.com/kenvaid/gos7/test		coverage: 0.0% of statements
+Validating D:\workspace\iot\edgex\device-s7
+?   	github.com/edgexfoundry/device-s7	[no test files]
+	github.com/edgexfoundry/device-s7/cmd		coverage: 0.0% of statements
+ok  	github.com/edgexfoundry/device-s7/doc/review/serverdemo	0.408s	coverage: [no statements]
+ok  	github.com/edgexfoundry/device-s7/internal/driver	0.586s	coverage: 14.4% of statements
+go: writing stat cache: open C:\Users\kenvaid\go\pkg\mod\cache\download\github.com\edgexfoundry\device-s7\@v\v0.0.1-0.20260116092253-5c52914f344c.info867816259.tmp: Access is denied.

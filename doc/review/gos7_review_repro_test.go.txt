@@ -1,0 +1,634 @@
+package gos7
+
+import (
+	"bytes"
+	"context"
+	"encoding/binary"
+	"errors"
+	"io"
+	"net"
+	"sync"
+	"testing"
+	"time"
+)
+
+// Review-only contract tests: injected through Go overlay, never copied into gos7.
+type reviewBackend struct{ send func([]byte) ([]byte, error) }
+
+func (b *reviewBackend) Send(p []byte) ([]byte, error) { return b.send(p) }
+func (b *reviewBackend) Verify(_, _ []byte) error      { return nil }
+func reviewFake(fn func([]byte) ([]byte, error)) *client {
+	b := &reviewBackend{send: fn}
+	return NewClient2(b, b).(*client)
+}
+func reviewPacket(n int) []byte {
+	p := make([]byte, n)
+	p[0], p[4], p[5], p[6], p[7], p[8] = 3, 2, 0xf0, 0x80, 0x32, 3
+	binary.BigEndian.PutUint16(p[2:], uint16(n))
+	p[11] = 5
+	return p
+}
+func reviewReadReply(data []byte) []byte {
+	p := reviewPacket(25 + len(data))
+	p[19], p[20], p[21], p[22] = 4, 1, 0xff, tsResByte
+	binary.BigEndian.PutUint16(p[13:], 2)
+	binary.BigEndian.PutUint16(p[15:], uint16(4+len(data)))
+	binary.BigEndian.PutUint16(p[23:], uint16(len(data)*8))
+	copy(p[25:], data)
+	return p
+}
+func reviewWriteReply() []byte {
+	p := reviewPacket(22)
+	p[19], p[20], p[21] = 5, 1, 0xff
+	binary.BigEndian.PutUint16(p[13:], 2)
+	binary.BigEndian.PutUint16(p[15:], 1)
+	return p
+}
+func reviewReadPacket(c net.Conn) ([]byte, error) {
+	h := make([]byte, 4)
+	if _, err := io.ReadFull(c, h); err != nil {
+		return nil, err
+	}
+	n := int(binary.BigEndian.Uint16(h[2:]))
+	if n < 4 {
+		return nil, errors.New("invalid test request length")
+	}
+	p := make([]byte, n)
+	copy(p, h)
+	_, err := io.ReadFull(c, p[4:])
+	return p, err
+}
+func reviewOne(t *testing.T, reply []byte) (*client, *TCPClientHandler, <-chan []byte) {
+	t.Helper()
+	a, b := net.Pipe()
+	h := NewTCPClientHandler("127.0.0.1:102", 0, 1)
+	h.conn, h.PDULength, h.IdleTimeout, h.Timeout = a, 480, 0, time.Second
+	requests := make(chan []byte, 1)
+	go func() {
+		defer b.Close()
+		if p, err := reviewReadPacket(b); err == nil {
+			requests <- p
+			_, _ = b.Write(reply)
+		}
+	}()
+	t.Cleanup(func() { _ = h.Close(); _ = b.Close() })
+	return NewClient(h).(*client), h, requests
+}
+func reviewNoPanic(t *testing.T) {
+	t.Helper()
+	if p := recover(); p != nil {
+		t.Errorf("must return an error, panicked: %v", p)
+	}
+}
+func reviewItem(word, amount int, data []byte) []S7DataItem {
+	area, db := s7areadb, 1
+	if word == s7wlcounter {
+		area, db = s7areact, 0
+	} else if word == s7wltimer {
+		area, db = s7areatm, 0
+	}
+	return []S7DataItem{{Area: area, WordLen: word, DBNumber: db, Start: 10, Bit: 3, Amount: amount, Data: data}}
+}
+func reviewSZL(data []byte, first, done bool) []byte {
+	offset, extra := 37, 0
+	if first {
+		offset, extra = 41, 8
+	}
+	p := reviewPacket(offset + len(data))
+	p[8], p[24], p[29], p[30] = 7, 1, 0xff, tsResOctet
+	if !done {
+		p[26] = 1
+	}
+	binary.BigEndian.PutUint16(p[31:], uint16(len(data)+extra))
+	if first {
+		binary.BigEndian.PutUint16(p[37:], 2)
+		binary.BigEndian.PutUint16(p[39:], 2)
+	}
+	copy(p[offset:], data)
+	return p
+}
+
+func TestReviewGos7Contracts(t *testing.T) {
+	t.Run("bit_read_write_same_address", func(t *testing.T) {
+		read, _, rq := reviewOne(t, reviewReadReply([]byte{1}))
+		items := reviewItem(s7wlbit, 1, []byte{1})
+		if err := read.AGReadMulti(items, 1); err != nil {
+			t.Fatal(err)
+		}
+		rp := <-rq
+		write, _, wq := reviewOne(t, reviewWriteReply())
+		if err := write.AGWriteMulti(items, 1); err != nil {
+			t.Fatal(err)
+		}
+		wp := <-wq
+		if !bytes.Equal(rp[28:31], wp[28:31]) {
+			t.Errorf("same Start=10 Bit=3: read address=%x write address=%x; expected 000053", rp[28:31], wp[28:31])
+		}
+	})
+	t.Run("timeout_discards_connection_and_stale_reply", func(t *testing.T) {
+		a, b := net.Pipe()
+		h := NewTCPClientHandler("127.0.0.1:102", 0, 1)
+		h.conn, h.PDULength, h.Timeout, h.IdleTimeout = a, 480, 30*time.Millisecond, 0
+		t.Cleanup(func() { _ = h.Close(); _ = b.Close() })
+		firstTimedOut := make(chan struct{})
+		go func() {
+			defer b.Close()
+			if _, err := reviewReadPacket(b); err != nil {
+				return
+			}
+			<-firstTimedOut
+			if _, err := reviewReadPacket(b); err != nil {
+				return
+			}
+			// Deliver the first request's late response after receiving the second.
+			_, _ = b.Write(reviewReadReply([]byte{0x11}))
+		}()
+		c := NewClient(h)
+		if err := c.AGReadDB(1, 0, 1, make([]byte, 1)); err == nil {
+			t.Fatal("expected first read timeout")
+		}
+		h.mu.Lock()
+		retained := h.conn != nil
+		h.mu.Unlock()
+		if retained {
+			t.Error("timed-out connection retained")
+		}
+		close(firstTimedOut)
+		data := []byte{0}
+		if err := c.AGReadDB(1, 1, 1, data); err == nil {
+			t.Errorf("second address read accepted stale first response: %x", data)
+		}
+	})
+	t.Run("global_read_error_propagated", func(t *testing.T) {
+		p := reviewReadReply([]byte{0x42})
+		p[17], p[18] = 0x81, 0x04
+		c, _, _ := reviewOne(t, p)
+		if err := c.AGReadDB(1, 0, 1, make([]byte, 1)); err == nil {
+			t.Error("S7 Ack_Data error 8104 ignored")
+		}
+	})
+	t.Run("global_write_error_propagated", func(t *testing.T) {
+		p := reviewWriteReply()
+		p[17], p[18] = 0x81, 0x04
+		c, _, _ := reviewOne(t, p)
+		if err := c.AGWriteDB(1, 0, 1, []byte{1}); err == nil {
+			t.Error("S7 Ack_Data error 8104 ignored")
+		}
+	})
+	for _, kind := range []string{"wrong_reference", "wrong_function", "wrong_protocol", "wrong_tpkt_version", "wrong_cotp_type"} {
+		t.Run(kind, func(t *testing.T) {
+			p := reviewReadReply([]byte{0x42})
+			switch kind {
+			case "wrong_reference":
+				p[11] = 0xaa
+			case "wrong_function":
+				p[19] = 5
+			case "wrong_protocol":
+				p[7] = 0x99
+			case "wrong_tpkt_version":
+				p[0] = 0
+			case "wrong_cotp_type":
+				p[5] = 0xd0
+			}
+			c, _, _ := reviewOne(t, p)
+			if err := c.AGReadDB(1, 0, 1, make([]byte, 1)); err == nil {
+				t.Error("mismatched response accepted")
+			}
+		})
+	}
+	t.Run("single_read_rejects_short_payload", func(t *testing.T) {
+		defer reviewNoPanic(t)
+		c, _, _ := reviewOne(t, reviewReadReply([]byte{0x42}))
+		data := bytes.Repeat([]byte{0xee}, 4)
+		if err := c.AGReadDB(1, 0, 4, data); err == nil {
+			t.Errorf("requested 4 bytes, received 1, returned success with %x", data)
+		}
+	})
+	t.Run("multi_read_rejects_short_payload", func(t *testing.T) {
+		defer reviewNoPanic(t)
+		p := reviewReadReply([]byte{0x42})
+		binary.BigEndian.PutUint16(p[23:], 32)
+		c, _, _ := reviewOne(t, p)
+		items := reviewItem(s7wlbyte, 4, bytes.Repeat([]byte{0xee}, 4))
+		if err := c.AGReadMulti(items, 1); err == nil {
+			t.Errorf("advertised 4 bytes, received 1, returned success with %x", items[0].Data)
+		}
+	})
+	t.Run("multi_write_rejects_short_response", func(t *testing.T) {
+		defer reviewNoPanic(t)
+		c, _, _ := reviewOne(t, reviewPacket(16))
+		if err := c.AGWriteMulti(reviewItem(s7wlbyte, 1, []byte{1}), 1); err == nil {
+			t.Error("short response accepted")
+		}
+	})
+	for _, method := range []string{"read", "write"} {
+		t.Run("count_exceeds_slice_"+method, func(t *testing.T) {
+			defer reviewNoPanic(t)
+			c := NewClient(NewTCPClientHandler("127.0.0.1:102", 0, 1))
+			var err error
+			if method == "read" {
+				err = c.AGReadMulti(nil, 1)
+			} else {
+				err = c.AGWriteMulti(nil, 1)
+			}
+			if err == nil {
+				t.Error("invalid count accepted")
+			}
+		})
+	}
+	t.Run("write_multi_validates_size_before_scratch_copy", func(t *testing.T) {
+		defer reviewNoPanic(t)
+		c := NewClient(NewTCPClientHandler("127.0.0.1:102", 0, 1))
+		if err := c.AGWriteMulti(reviewItem(s7wlbyte, 1021, make([]byte, 1021)), 1); err == nil {
+			t.Error("oversized item accepted")
+		}
+	})
+	t.Run("write_multi_rejects_short_input", func(t *testing.T) {
+		c, _, q := reviewOne(t, reviewWriteReply())
+		if err := c.AGWriteMulti(reviewItem(s7wlbyte, 4, []byte{0x42}), 1); err == nil {
+			t.Errorf("short input silently padded and written: %x", (<-q)[35:39])
+		}
+	})
+	t.Run("read_area_rejects_short_output", func(t *testing.T) {
+		defer reviewNoPanic(t)
+		c, _, _ := reviewOne(t, reviewReadReply([]byte{1, 2, 3, 4}))
+		if err := c.AGReadDB(1, 0, 4, make([]byte, 1)); err == nil {
+			t.Error("short output accepted")
+		}
+	})
+	t.Run("write_area_rejects_short_input", func(t *testing.T) {
+		defer reviewNoPanic(t)
+		c, _, _ := reviewOne(t, reviewWriteReply())
+		if err := c.AGWriteDB(1, 0, 4, []byte{1}); err == nil {
+			t.Error("short input accepted")
+		}
+	})
+	t.Run("negative_amount_rejected", func(t *testing.T) {
+		h := NewTCPClientHandler("127.0.0.1:102", 0, 1)
+		h.PDULength = 480
+		if err := NewClient(h).AGReadDB(1, 0, -1, nil); err == nil {
+			t.Error("negative read amount returned success without I/O")
+		}
+	})
+	for _, method := range []string{"multi", "area"} {
+		t.Run("counter_transport_"+method, func(t *testing.T) {
+			c, _, q := reviewOne(t, reviewWriteReply())
+			if method == "multi" {
+				if err := c.AGWriteMulti(reviewItem(s7wlcounter, 1, []byte{0x12, 0x34}), 1); err != nil {
+					t.Fatal(err)
+				}
+			} else {
+				if err := c.AGWriteCT(0, 1, []byte{0x12, 0x34}); err != nil {
+					t.Fatal(err)
+				}
+			}
+			p := <-q
+			if p[32] != tsResOctet {
+				t.Errorf("counter transport-size=%d, want octet=9; request tail=%x", p[32], p[31:])
+			}
+		})
+	}
+	for _, kind := range []string{"timer", "counter"} {
+		t.Run("full_16_bit_"+kind, func(t *testing.T) {
+			p := reviewReadReply([]byte{0x12, 0x34})
+			p[22] = tsResOctet
+			binary.BigEndian.PutUint16(p[23:], 2)
+			c, _, _ := reviewOne(t, p)
+			data := []byte{0xee, 0xee}
+			var err error
+			if kind == "timer" {
+				err = c.AGReadTM(0, 1, data)
+			} else {
+				err = c.AGReadCT(0, 1, data)
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !bytes.Equal(data, []byte{0x12, 0x34}) {
+				t.Errorf("16-bit result lost data: got %x, wire 1234", data)
+			}
+		})
+	}
+	for _, variable := range []string{"D", "DB1.X", "DB1.DBX0"} {
+		t.Run("invalid_syntax_"+variable, func(t *testing.T) {
+			defer reviewNoPanic(t)
+			c := NewClient(NewTCPClientHandler("127.0.0.1:102", 0, 1))
+			if _, err := c.Read(variable, make([]byte, 8)); err == nil {
+				t.Error("invalid syntax accepted")
+			}
+		})
+	}
+	t.Run("non_db_read_syntax_implemented", func(t *testing.T) {
+		called := false
+		c := reviewFake(func([]byte) ([]byte, error) { called = true; return reviewReadReply([]byte{1}), nil })
+		value, err := c.Read("MB0", make([]byte, 1))
+		if !called || value == nil || err != nil {
+			t.Errorf("MB0: I/O=%v value=%v error=%v", called, value, err)
+		}
+	})
+	for _, op := range []string{"clock_get_transport_error", "clock_set_fits_template"} {
+		t.Run(op, func(t *testing.T) {
+			defer reviewNoPanic(t)
+			want := errors.New("local network failure")
+			c := reviewFake(func([]byte) ([]byte, error) { return nil, want })
+			var err error
+			if op == "clock_get_transport_error" {
+				_, err = c.PGClockWrite()
+			} else {
+				err = c.PGClockRead(time.Now())
+			}
+			if !errors.Is(err, want) {
+				t.Errorf("lost transport error: %v", err)
+			}
+		})
+	}
+	for _, op := range []string{"status", "block_info", "clock"} {
+		t.Run(op+"_short_response", func(t *testing.T) {
+			defer reviewNoPanic(t)
+			p := reviewPacket(33)
+			p[29] = 0xff
+			c := reviewFake(func([]byte) ([]byte, error) { return p, nil })
+			var err error
+			switch op {
+			case "status":
+				_, err = c.PLCGetStatus()
+			case "block_info":
+				_, err = c.GetAgBlockInfo(blockDB, 1)
+			case "clock":
+				_, err = c.PGClockWrite()
+			}
+			if err == nil {
+				t.Error("short response accepted")
+			}
+		})
+	}
+	t.Run("szl_fragment_preservation_header_and_size", func(t *testing.T) {
+		calls := 0
+		c := reviewFake(func([]byte) ([]byte, error) {
+			calls++
+			if calls == 1 {
+				return reviewSZL([]byte{1, 2}, true, false), nil
+			}
+			return reviewSZL([]byte{3, 4}, false, true), nil
+		})
+		szl, size, err := c.readSzl(0x001c, 0)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !bytes.Equal(szl.Data, []byte{1, 2, 3, 4}) {
+			t.Errorf("earlier fragment erased: %x", szl.Data)
+		}
+		if szl.Header.LengthHeader != 2 {
+			t.Errorf("record width doubled: %d", szl.Header.LengthHeader)
+		}
+		if size != 4 {
+			t.Errorf("returned size=%d, expected 4", size)
+		}
+	})
+	t.Run("szl_bad_return_code_rejected", func(t *testing.T) {
+		p := reviewSZL([]byte{1, 2}, true, true)
+		p[29] = 5
+		c := reviewFake(func([]byte) ([]byte, error) { return p, nil })
+		if _, _, err := c.readSzl(0x001c, 0); err == nil {
+			t.Error("failed item return code accepted because global status is zero")
+		}
+	})
+	t.Run("order_code_id_and_return", func(t *testing.T) {
+		defer reviewNoPanic(t)
+		c := reviewFake(func(req []byte) ([]byte, error) {
+			if id := binary.BigEndian.Uint16(req[29:]); id != 0x0011 {
+				t.Errorf("order-code SZL=%04x, want 0011", id)
+			}
+			return reviewSZL(make([]byte, 24), true, true), nil
+		})
+		if _, err := c.GetOrderCode(); err != nil {
+			t.Error(err)
+		}
+	})
+	t.Run("directory_preserves_first_error", func(t *testing.T) {
+		n := 0
+		want := errors.New("first block-list failed")
+		c := reviewFake(func([]byte) ([]byte, error) {
+			n++
+			if n == 1 {
+				return nil, want
+			}
+			return reviewPacket(33), nil
+		})
+		if _, err := c.PGListBlocks(); !errors.Is(err, want) {
+			t.Errorf("first error overwritten: %v", err)
+		}
+	})
+	t.Run("wstring_character_count", func(t *testing.T) {
+		h := Helper{}
+		p := make([]byte, 20)
+		h.SetWStringAt(p, 0, 8, "中文")
+		if n := binary.BigEndian.Uint16(p[2:]); n != 2 {
+			t.Errorf("header length=%d, expected 2 characters", n)
+		}
+		if got := h.GetWStringAt(p, 0); got != "中文" {
+			t.Errorf("roundtrip=%q", got)
+		}
+	})
+	t.Run("chars_write_updates_caller", func(t *testing.T) {
+		h := Helper{}
+		p := []byte("abcd")
+		h.SetCharsAt(p, 2, "XY")
+		if string(p) != "abXY" {
+			t.Errorf("caller buffer=%q, want abXY", p)
+		}
+	})
+	t.Run("counter_roundtrip", func(t *testing.T) {
+		h := Helper{}
+		v := h.ToCounter(123)
+		if got := h.GetCounter(v); got != 123 {
+			t.Errorf("123 -> encoded %04x -> %d", v, got)
+		}
+	})
+	t.Run("tod_offset_and_milliseconds", func(t *testing.T) {
+		h := Helper{}
+		p := make([]byte, 8)
+		want := time.Date(1970, 1, 1, 1, 2, 3, 456000000, time.UTC)
+		h.SetTODAt(p, 4, want)
+		if got := h.GetTODAt(p, 4); !got.Equal(want) {
+			t.Errorf("offset roundtrip=%s, want %s", got, want)
+		}
+	})
+	t.Run("tod_millisecond_precision", func(t *testing.T) {
+		h := Helper{}
+		p := make([]byte, 4)
+		want := time.Date(1970, 1, 1, 1, 2, 3, 456000000, time.UTC)
+		h.SetTODAt(p, 0, want)
+		if got := h.GetTODAt(p, 0); !got.Equal(want) {
+			t.Errorf("TOD lost milliseconds: %s", got)
+		}
+	})
+	t.Run("dtl_weekday_numbering", func(t *testing.T) {
+		h := Helper{}
+		p := make([]byte, 12)
+		h.SetDTLAt(p, 0, time.Date(2026, 9, 27, 0, 0, 0, 0, time.UTC))
+		if p[4] != 1 {
+			t.Errorf("Sunday encoded %d, Siemens expects 1", p[4])
+		}
+	})
+	t.Run("date_time_weekday_numbering", func(t *testing.T) {
+		h := Helper{}
+		p := make([]byte, 8)
+		h.SetDateTimeAt(p, 0, time.Date(2026, 9, 27, 0, 0, 0, 0, time.UTC))
+		if p[7]&0x0f != 1 {
+			t.Errorf("Sunday encoded %d, Siemens expects 1", p[7]&0x0f)
+		}
+	})
+	t.Run("date_unsigned_range", func(t *testing.T) {
+		h := Helper{}
+		p := []byte{0x80, 0}
+		want := time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC).AddDate(0, 0, 32768)
+		if got := h.GetDateAt(p, 0); !got.Equal(want) {
+			t.Errorf("DATE 8000 decoded %s, want %s", got, want)
+		}
+	})
+	t.Run("negotiation_rejects_impossible_pdu", func(t *testing.T) {
+		p := reviewPacket(27)
+		binary.BigEndian.PutUint16(p[25:], 1)
+		_, h, _ := reviewOne(t, p)
+		if err := h.negotiatePduLength(); err == nil {
+			t.Errorf("negotiated PDU=%d accepted despite being smaller than S7 header", h.PDULength)
+		}
+	})
+	t.Run("small_pdu_does_not_send_zero_element_loop", func(t *testing.T) {
+		a, b := net.Pipe()
+		h := NewTCPClientHandler("127.0.0.1:102", 0, 1)
+		h.conn, h.PDULength, h.IdleTimeout, h.Timeout = a, 18, 0, time.Second
+		t.Cleanup(func() { _ = h.Close(); _ = b.Close() })
+		observed := make(chan int, 1)
+		go func() {
+			defer b.Close()
+			zero := 0
+			for i := 0; i < 3; i++ {
+				p, err := reviewReadPacket(b)
+				if err != nil {
+					break
+				}
+				if binary.BigEndian.Uint16(p[23:]) == 0 {
+					zero++
+				}
+				if _, err := b.Write(reviewReadReply(nil)); err != nil {
+					break
+				}
+			}
+			observed <- zero
+		}()
+		_ = NewClient(h).AGReadDB(1, 0, 1, make([]byte, 1))
+		if n := <-observed; n > 0 {
+			t.Errorf("non-progressing read generated %d zero-element requests before test peer closed", n)
+		}
+	})
+	t.Run("custom_transporter_supported", func(t *testing.T) {
+		defer reviewNoPanic(t)
+		c := reviewFake(func([]byte) ([]byte, error) { return reviewReadReply([]byte{1}), nil })
+		if err := c.AGReadDB(1, 0, 1, make([]byte, 1)); err != nil {
+			t.Errorf("custom transporter unusable: %v", err)
+		}
+	})
+}
+
+func TestReviewGos7ConcurrentIO(t *testing.T) {
+	a, b := net.Pipe()
+	h := NewTCPClientHandler("127.0.0.1:102", 0, 1)
+	h.conn, h.PDULength, h.IdleTimeout, h.Timeout = a, 480, 0, time.Second
+	defer h.Close()
+	defer b.Close()
+	go func() {
+		for {
+			p, err := reviewReadPacket(b)
+			if err != nil {
+				return
+			}
+			var reply []byte
+			if p[17] == 5 {
+				reply = reviewWriteReply()
+			} else {
+				reply = reviewReadReply([]byte{byte(p[30] / 8)})
+			}
+			if _, err := b.Write(reply); err != nil {
+				return
+			}
+		}
+	}()
+	c := NewClient(h)
+	var wg sync.WaitGroup
+	for w := 0; w < 4; w++ {
+		wg.Add(1)
+		go func(start int) {
+			defer wg.Done()
+			for i := 0; i < 50; i++ {
+				data := []byte{0}
+				if err := c.AGReadDB(1, start, 1, data); err != nil || data[0] != byte(start) {
+					t.Errorf("concurrent read %d: %x %v", start, data, err)
+					return
+				}
+				if err := c.AGWriteDB(1, start, 1, []byte{1}); err != nil {
+					t.Error(err)
+					return
+				}
+			}
+		}(w)
+	}
+	wg.Wait()
+}
+
+// Exercise actual library methods concurrently; this contains no unsynchronized test writes.
+func TestReviewGos7ConcurrentConnectAndRead(t *testing.T) {
+	a, b := net.Pipe()
+	h := NewTCPClientHandler("127.0.0.1:102", 0, 1)
+	h.conn, h.PDULength, h.IdleTimeout, h.Timeout = a, 480, 0, time.Second
+	defer h.Close()
+	defer b.Close()
+	go func() {
+		for {
+			p, err := reviewReadPacket(b)
+			if err != nil {
+				return
+			}
+			var reply []byte
+			if p[5] == 0xe0 {
+				reply = reviewPacket(22)
+				reply[5] = 0xd0
+			} else if p[17] == 0xf0 {
+				reply = reviewPacket(27)
+				binary.BigEndian.PutUint16(reply[25:], 480)
+			} else {
+				reply = reviewReadReply([]byte{1})
+			}
+			if _, err := b.Write(reply); err != nil {
+				return
+			}
+		}
+	}()
+	c := NewClient(h)
+	var wg sync.WaitGroup
+	start := make(chan struct{})
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		<-start
+		for i := 0; i < 200; i++ {
+			if err := h.ConnectContext(context.Background()); err != nil {
+				t.Logf("concurrent connect: %v", err)
+				return
+			}
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		<-start
+		for i := 0; i < 500; i++ {
+			if err := c.AGReadDB(1, 0, 1, make([]byte, 1)); err != nil {
+				t.Logf("concurrent read: %v", err)
+				return
+			}
+		}
+	}()
+	close(start)
+	wg.Wait()
+}

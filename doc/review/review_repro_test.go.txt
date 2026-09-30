@@ -1,0 +1,418 @@
+package driver
+
+import (
+	"bytes"
+	"encoding/binary"
+	"fmt"
+	"io"
+	"net"
+	"testing"
+	"time"
+
+	sdkModel "github.com/edgexfoundry/device-sdk-go/v4/pkg/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/logger"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/models"
+	"github.com/kenvaid/gos7"
+)
+
+type reviewClient struct {
+	gos7.Client
+	read  func([]gos7.S7DataItem) error
+	write func([]gos7.S7DataItem) error
+}
+
+func (c *reviewClient) AGReadMulti(items []gos7.S7DataItem, _ int) error  { return c.read(items) }
+func (c *reviewClient) AGWriteMulti(items []gos7.S7DataItem, _ int) error { return c.write(items) }
+func reviewDriver(c gos7.Client) *Driver {
+	d := &Driver{lc: logger.NewMockClient(), s7Clients: map[string]*S7Client{"review": {Client: c}}}
+	driver = d
+	return d
+}
+func reviewRequest(address, typ string) sdkModel.CommandRequest {
+	return sdkModel.CommandRequest{DeviceResourceName: "value", Type: typ, Attributes: map[string]any{"NodeName": address}}
+}
+func reviewValue(t *testing.T, typ string, value any) *sdkModel.CommandValue {
+	t.Helper()
+	v, err := sdkModel.NewCommandValue("value", typ, value)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return v
+}
+
+// These are contract checks against the unmodified implementation; failures reproduce review findings.
+func TestReviewContracts(t *testing.T) {
+	t.Run("read_transport_failure", func(t *testing.T) {
+		calls := 0
+		d := reviewDriver(&reviewClient{read: func([]gos7.S7DataItem) error { calls++; return io.EOF }})
+		values, err := d.HandleReadCommands("review", nil, []sdkModel.CommandRequest{reviewRequest("VD0", common.ValueTypeUint32)})
+		if err == nil {
+			t.Errorf("transport EOF must fail: got err=%v values=%+v calls=%d", err, values[0].Value, calls)
+		}
+	})
+	t.Run("write_transport_failure", func(t *testing.T) {
+		calls := 0
+		d := reviewDriver(&reviewClient{write: func([]gos7.S7DataItem) error { calls++; return io.EOF }})
+		err := d.HandleWriteCommands("review", nil, []sdkModel.CommandRequest{reviewRequest("VW0", common.ValueTypeUint16)}, []*sdkModel.CommandValue{reviewValue(t, common.ValueTypeUint16, uint16(7))})
+		if err == nil {
+			t.Errorf("transport EOF must fail: got err=%v calls=%d", err, calls)
+		}
+	})
+	t.Run("write_item_failure", func(t *testing.T) {
+		d := reviewDriver(&reviewClient{write: func(items []gos7.S7DataItem) error { items[0].Error = "PLC access denied"; return nil }})
+		err := d.HandleWriteCommands("review", nil, []sdkModel.CommandRequest{reviewRequest("VW0", common.ValueTypeUint16)}, []*sdkModel.CommandValue{reviewValue(t, common.ValueTypeUint16, uint16(7))})
+		if err == nil {
+			t.Error("per-item PLC denial must fail: got nil")
+		}
+	})
+	t.Run("invalid_read_address", func(t *testing.T) {
+		calls := 0
+		d := reviewDriver(&reviewClient{read: func([]gos7.S7DataItem) error { calls++; return nil }})
+		values, err := d.HandleReadCommands("review", nil, []sdkModel.CommandRequest{reviewRequest("INVALID", common.ValueTypeUint16)})
+		if err == nil {
+			t.Errorf("invalid address must fail: got value=%v network calls=%d", values[0].Value, calls)
+		}
+	})
+	t.Run("read_item_failure_partial_success", func(t *testing.T) {
+		d := reviewDriver(&reviewClient{read: func(items []gos7.S7DataItem) error {
+			items[0].Error = "PLC access denied"
+			items[1].Data[1] = 9
+			return nil
+		}})
+		values, err := d.HandleReadCommands("review", nil, []sdkModel.CommandRequest{reviewRequest("VW0", common.ValueTypeUint16), reviewRequest("VW2", common.ValueTypeUint16)})
+		if err == nil {
+			t.Errorf("partial read silently succeeds: err=%v returned=%d requested=2 value=%v", err, len(values), values[0].Value)
+		}
+	})
+	t.Run("uint64_decode", func(t *testing.T) {
+		v, err := getCommandValueType([]byte{1, 2, 3, 4}, common.ValueTypeUint64)
+		if err == nil {
+			t.Errorf("short uint64 buffer must fail: got value=%v err=%v", v, err)
+		}
+	})
+	t.Run("uint64_write", func(t *testing.T) {
+		var sent []byte
+		d := reviewDriver(&reviewClient{write: func(items []gos7.S7DataItem) error { sent = append([]byte(nil), items[0].Data...); return nil }})
+		err := d.HandleWriteCommands("review", nil, []sdkModel.CommandRequest{reviewRequest("VL0", common.ValueTypeUint64)}, []*sdkModel.CommandValue{reviewValue(t, common.ValueTypeUint64, uint64(0x0102030405060708))})
+		if err != nil || !bytes.Equal(sent, []byte{1, 2, 3, 4, 5, 6, 7, 8}) {
+			t.Errorf("uint64 must preserve 8 bytes: sent=%x err=%v", sent, err)
+		}
+	})
+	t.Run("string_decode", func(t *testing.T) {
+		v, err := getCommandValueType([]byte{'t', 'e', 's', 't'}, common.ValueTypeString)
+		if err == nil && v == "" {
+			t.Error("nonempty string silently becomes empty with nil error")
+		}
+	})
+	t.Run("string_write", func(t *testing.T) {
+		var sent []byte
+		d := reviewDriver(&reviewClient{write: func(items []gos7.S7DataItem) error { sent = append([]byte(nil), items[0].Data...); return nil }})
+		err := d.HandleWriteCommands("review", nil, []sdkModel.CommandRequest{reviewRequest("VD0", common.ValueTypeString)}, []*sdkModel.CommandValue{reviewValue(t, common.ValueTypeString, "test")})
+		if err == nil && bytes.Equal(sent, []byte{0, 0, 0, 0}) {
+			t.Errorf("string write silently sends zeros: %x", sent)
+		}
+	})
+	t.Run("write_value_type_mismatch", func(t *testing.T) {
+		calls := 0
+		d := reviewDriver(&reviewClient{write: func(items []gos7.S7DataItem) error { calls++; t.Logf("sent %x", items[0].Data); return nil }})
+		err := d.HandleWriteCommands("review", nil, []sdkModel.CommandRequest{reviewRequest("VW0", common.ValueTypeUint16)}, []*sdkModel.CommandValue{reviewValue(t, common.ValueTypeUint32, uint32(1234))})
+		if err == nil || calls != 0 {
+			t.Errorf("type mismatch must fail before I/O: err=%v calls=%d", err, calls)
+		}
+	})
+	for _, address := range []string{"D", "DB1.", "DB1.X"} {
+		t.Run("malformed_"+address, func(t *testing.T) {
+			defer func() {
+				if r := recover(); r != nil {
+					t.Errorf("malformed address panics: %v", r)
+				}
+			}()
+			d := reviewDriver(nil)
+			if _, err := d.getDBInfo(address); err == nil {
+				t.Error("malformed address accepted")
+			}
+		})
+	}
+	t.Run("missing_protocol_fields", func(t *testing.T) {
+		d := reviewDriver(nil)
+		err := d.ValidateDevice(models.Device{Name: "review", Protocols: map[string]models.ProtocolProperties{"s7": {}}})
+		if err == nil {
+			t.Error("empty s7 protocol properties accepted")
+		}
+	})
+	t.Run("db_bit_out_of_range", func(t *testing.T) {
+		d := reviewDriver(nil)
+		info, err := d.getDBInfo("DB1.DBX0.8")
+		if err == nil {
+			t.Errorf("bit 8 accepted and points to next byte: %+v", info)
+		}
+	})
+	for _, address := range []string{"EB10", "EW10", "ED10", "AB10", "AW10", "AD10", "MB10", "MW10", "MD10", "T10", "C10"} {
+		t.Run("area_"+address, func(t *testing.T) {
+			info, err := reviewDriver(nil).getDBInfo(address)
+			if err == nil && (info.Area == 0 || info.Amount == 0) {
+				t.Errorf("accepted unusable descriptor: %+v", info)
+			}
+		})
+	}
+	t.Run("pdu240_write16", func(t *testing.T) {
+		h := gos7.NewTCPClientHandler("127.0.0.1:1", 0, 1)
+		h.PDULength = 240
+		d := reviewDriver(gos7.NewClient(h))
+		d.s7Clients["review"].Handler = h
+		var reqs []sdkModel.CommandRequest
+		var values []*sdkModel.CommandValue
+		for i := 0; i < 16; i++ {
+			reqs = append(reqs, reviewRequest(fmt.Sprintf("DB1.DBB%d", i), common.ValueTypeUint8))
+			values = append(values, reviewValue(t, common.ValueTypeUint8, uint8(1)))
+		}
+		if err := d.HandleWriteCommands("review", nil, reqs, values); err == nil {
+			t.Error("16-item packet exceeds negotiated PDU=240, but driver reports success")
+		}
+	})
+	t.Run("old_request_evicts_replacement", func(t *testing.T) {
+		started, release, done := make(chan struct{}), make(chan struct{}), make(chan struct{})
+		calls := 0
+		old := &reviewClient{read: func([]gos7.S7DataItem) error {
+			calls++
+			if calls == 1 {
+				close(started)
+				<-release
+			}
+			return io.EOF
+		}}
+		d := reviewDriver(old)
+		go func() {
+			defer close(done)
+			d.HandleReadCommands("review", nil, []sdkModel.CommandRequest{reviewRequest("VW0", common.ValueTypeUint16)})
+		}()
+		<-started
+		// Equivalent to publishing the replacement at the end of UpdateDevice.
+		replacement := &S7Client{Client: &reviewClient{}}
+		d.mu.Lock()
+		d.s7Clients["review"] = replacement
+		d.mu.Unlock()
+		close(release)
+		<-done
+		if d.s7Clients["review"] != replacement {
+			t.Error("failed old request deleted the replacement connection")
+		}
+	})
+	t.Run("different_devices_parallel", func(t *testing.T) {
+		started, release, done := make(chan struct{}, 2), make(chan struct{}), make(chan error, 2)
+		c := &reviewClient{read: func(items []gos7.S7DataItem) error { started <- struct{}{}; <-release; return nil }}
+		d := reviewDriver(c)
+		d.s7Clients["other"] = &S7Client{Client: c}
+		for _, name := range []string{"review", "other"} {
+			go func(name string) {
+				_, err := d.HandleReadCommands(name, nil, []sdkModel.CommandRequest{reviewRequest("VW0", common.ValueTypeUint16)})
+				done <- err
+			}(name)
+		}
+		for i := 0; i < 2; i++ {
+			select {
+			case <-started:
+			case <-time.After(time.Second):
+				close(release)
+				t.Fatal("different devices did not run in parallel")
+			}
+		}
+		close(release)
+		for i := 0; i < 2; i++ {
+			if err := <-done; err != nil {
+				t.Fatal(err)
+			}
+		}
+	})
+	t.Run("same_device_serial", func(t *testing.T) {
+		started, release, done := make(chan struct{}, 2), make(chan struct{}), make(chan error, 2)
+		c := &reviewClient{read: func(items []gos7.S7DataItem) error { started <- struct{}{}; <-release; return nil }}
+		d := reviewDriver(c)
+		call := func() {
+			_, err := d.HandleReadCommands("review", nil, []sdkModel.CommandRequest{reviewRequest("VW0", common.ValueTypeUint16)})
+			done <- err
+		}
+		go call()
+		<-started
+		go call()
+		select {
+		case <-started:
+			close(release)
+			t.Fatal("same device operations overlap")
+		case <-time.After(50 * time.Millisecond):
+		}
+		close(release)
+		for i := 0; i < 2; i++ {
+			if err := <-done; err != nil {
+				t.Fatal(err)
+			}
+		}
+	})
+	t.Run("cold_connection_burst", func(t *testing.T) {
+		l, err := net.Listen("tcp", "127.0.0.1:0")
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer l.Close()
+		accepted, gate := make(chan struct{}, 8), make(chan struct{})
+		go func() {
+			for i := 0; i < 8; i++ {
+				c, err := l.Accept()
+				if err != nil {
+					return
+				}
+				accepted <- struct{}{}
+				go func(c net.Conn) {
+					defer c.Close()
+					c.SetDeadline(time.Now().Add(3 * time.Second))
+					<-gate
+					for n := 0; n < 2; n++ {
+						header := make([]byte, 4)
+						if _, err := io.ReadFull(c, header); err != nil {
+							return
+						}
+						p := make([]byte, int(binary.BigEndian.Uint16(header[2:]))-4)
+						if _, err := io.ReadFull(c, p); err != nil {
+							return
+						}
+						var reply []byte
+						if n == 0 {
+							reply = make([]byte, 22)
+							reply[5] = 0xd0
+						} else {
+							reply = make([]byte, 27)
+							binary.BigEndian.PutUint16(reply[25:], 480)
+						}
+						reply[0] = 3
+						binary.BigEndian.PutUint16(reply[2:], uint16(len(reply)))
+						if _, err := c.Write(reply); err != nil {
+							return
+						}
+					}
+					io.Copy(io.Discard, c)
+				}(c)
+			}
+		}()
+		host, port, _ := net.SplitHostPort(l.Addr().String())
+		pp := map[string]models.ProtocolProperties{"s7": {"Host": host, "Port": port, "Rack": 0, "Slot": 1, "Timeout": 2, "IdleTimeout": 0}}
+		d := reviewDriver(nil)
+		delete(d.s7Clients, "review")
+		done := make(chan *S7Client, 8)
+		for i := 0; i < 8; i++ {
+			go func() { done <- d.getS7Client("review", pp) }()
+		}
+		count := 0
+		for count < 8 {
+			select {
+			case <-accepted:
+				count++
+			case <-time.After(time.Second):
+				close(gate)
+				t.Fatalf("received only %d connections", count)
+			}
+		}
+		close(gate)
+		for i := 0; i < 8; i++ {
+			if c := <-done; c == nil {
+				t.Fatal("connect failed")
+			}
+		}
+		d.closeS7Client("review")
+		if count > 1 {
+			t.Errorf("one device cold burst creates %d TCP connections before retaining one", count)
+		}
+	})
+	for _, address := range []string{"DB1.DBX100.0", "DB1.DBX1.3", "Q12.5", "M29.1"} {
+		t.Run("wire_bit_"+address, func(t *testing.T) { reviewWireBit(t, address) })
+	}
+}
+
+func reviewWireBit(t *testing.T, address string) {
+	t.Helper()
+	l, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer l.Close()
+	packets := make(chan []byte, 4)
+	go func() {
+		c, err := l.Accept()
+		if err != nil {
+			return
+		}
+		defer c.Close()
+		c.SetDeadline(time.Now().Add(3 * time.Second))
+		for n := 0; n < 4; n++ {
+			header := make([]byte, 4)
+			if _, err = io.ReadFull(c, header); err != nil {
+				return
+			}
+			p := make([]byte, int(binary.BigEndian.Uint16(header[2:])))
+			copy(p, header)
+			if _, err = io.ReadFull(c, p[4:]); err != nil {
+				return
+			}
+			var reply []byte
+			switch n {
+			case 0:
+				reply = make([]byte, 22)
+				reply[5] = 0xd0
+			case 1:
+				reply = make([]byte, 27)
+				binary.BigEndian.PutUint16(reply[25:], 480)
+			case 2:
+				packets <- p
+				reply = make([]byte, 27)
+				reply[20] = 1
+				reply[21] = 255
+				reply[22] = 3
+				reply[24] = 1
+				reply[25] = 1
+			case 3:
+				packets <- p
+				reply = make([]byte, 22)
+				reply[20] = 1
+				reply[21] = 255
+			}
+			reply[0] = 3
+			binary.BigEndian.PutUint16(reply[2:], uint16(len(reply)))
+			if _, err = c.Write(reply); err != nil {
+				return
+			}
+		}
+	}()
+	h := gos7.NewTCPClientHandler(l.Addr().String(), 0, 1)
+	h.Timeout = time.Second
+	h.IdleTimeout = 0
+	if err = h.Connect(); err != nil {
+		t.Fatal(err)
+	}
+	defer h.Close()
+	d := reviewDriver(gos7.NewClient(h))
+	d.s7Clients["review"].Handler = h
+	r := reviewRequest(address, common.ValueTypeBool)
+	if _, err = d.HandleReadCommands("review", nil, []sdkModel.CommandRequest{r}); err != nil {
+		t.Fatal(err)
+	}
+	if err = d.HandleWriteCommands("review", nil, []sdkModel.CommandRequest{r}, []*sdkModel.CommandValue{reviewValue(t, common.ValueTypeBool, true)}); err != nil {
+		t.Fatal(err)
+	}
+	readPacket, writePacket := <-packets, <-packets
+	decode := func(p []byte) int { return int(p[28])<<16 | int(p[29])<<8 | int(p[30]) }
+	readAddr, writeAddr := decode(readPacket), decode(writePacket)
+	var want int
+	switch address {
+	case "DB1.DBX100.0":
+		want = 800
+	case "DB1.DBX1.3":
+		want = 11
+	case "Q12.5":
+		want = 101
+	case "M29.1":
+		want = 233
+	}
+	if readAddr != want || writeAddr != want {
+		t.Errorf("wire bit address should be %d: read=%d write=%d", want, readAddr, writeAddr)
+	}
+}

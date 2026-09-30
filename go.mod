@@ -5,7 +5,7 @@ go 1.23.7
 require (
 	github.com/edgexfoundry/device-sdk-go/v4 v4.1.0-dev.38
 	github.com/edgexfoundry/go-mod-core-contracts/v4 v4.1.0-dev.12
-	github.com/kenvaid/gos7 v0.0.0-20260116060817-cd3f477de877
+	github.com/kenvaid/gos7 v0.0.0-20260930084703-0a8e4f3e873c
 	github.com/spf13/cast v1.10.0
 )
 
